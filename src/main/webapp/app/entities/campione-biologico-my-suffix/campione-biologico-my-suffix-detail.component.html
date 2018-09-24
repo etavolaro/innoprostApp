@@ -1,0 +1,131 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="campioneBiologico">
+            <h2><span jhiTranslate="innoprostApp.campioneBiologico.detail.title">Campione Biologico</span> {{campioneBiologico.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.codRH">Cod RH</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.codRH}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.numeroCartellaClinica">Numero Cartella Clinica</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.numeroCartellaClinica}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.codUMG">Cod UMG</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.codUMG}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.dataEsecuzione">Data Esecuzione</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.dataEsecuzione}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.etaPaziente">Eta Paziente</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.etaPaziente}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.dimensioneGhiandolaProstatica">Dimensione Ghiandola Prostatica</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.dimensioneGhiandolaProstatica}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.tipoCampione">Tipo Campione</span></dt>
+                <dd>
+                    <span jhiTranslate="{{'innoprostApp.TipoCampione.' + campioneBiologico.tipoCampione}}">{{campioneBiologico.tipoCampione}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.valutazionePCA3">Valutazione PCA 3</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.valutazionePCA3}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.psaTotale">Psa Totale</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.psaTotale}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.rapportoFT">Rapporto FT</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.rapportoFT}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.psaFree">Psa Free</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.psaFree}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.malattia">Malattia</span></dt>
+                <dd>
+                    <span jhiTranslate="{{'innoprostApp.TipoMalattia.' + campioneBiologico.malattia}}">{{campioneBiologico.malattia}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.dataBiopsia">Data Biopsia</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.dataBiopsia}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.esitoBiopsiaProstaticaGleasonScoreComposizione">Esito Biopsia Prostatica Gleason Score Composizione</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.esitoBiopsiaProstaticaGleasonScoreComposizione}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.esitoBiopsiaProstaticaGleasonScore">Esito Biopsia Prostatica Gleason Score</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.esitoBiopsiaProstaticaGleasonScore}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.numeroPrelieviPositiviSulTotale">Numero Prelievi Positivi Sul Totale</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.numeroPrelieviPositiviSulTotale}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.totalePrelievi">Totale Prelievi</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.totalePrelievi}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.pregressaChirurgiaProstatica">Pregressa Chirurgia Prostatica</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.pregressaChirurgiaProstatica}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.terapiaInibitori5AlfaReduttasi">Terapia Inibitori 5 Alfa Reduttasi</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.terapiaInibitori5AlfaReduttasi}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.terapiaAntiandrogenicaNeoadiuvante">Terapia Antiandrogenica Neoadiuvante</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.terapiaAntiandrogenicaNeoadiuvante}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.radioterapiaPelvi">Radioterapia Pelvi</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.radioterapiaPelvi}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.rischio">Rischio</span></dt>
+                <dd>
+                    <span jhiTranslate="{{'innoprostApp.TipoRischio.' + campioneBiologico.rischio}}">{{campioneBiologico.rischio}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.dataIntervento">Data Intervento</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.dataIntervento}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoT">Esame Istologico T</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.esameIstologicoT}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoN">Esame Istologico N</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.esameIstologicoN}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoGleasonScoreComposizione">Esame Istologico Gleason Score Composizione</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.esameIstologicoGleasonScoreComposizione}}</span>
+                </dd>
+                <dt><span jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoGleasonScore">Esame Istologico Gleason Score</span></dt>
+                <dd>
+                    <span>{{campioneBiologico.esameIstologicoGleasonScore}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/campione-biologico-my-suffix', campioneBiologico.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

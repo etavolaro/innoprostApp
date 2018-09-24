@@ -1,0 +1,48 @@
+
+{
+    "innoprostApp": {
+        "campioneBiologico" : {
+            "home": {
+                "title": "Campione Biologicos",
+                "createLabel": "Create a new Campione Biologico",
+                "createOrEditLabel": "Create or edit a Campione Biologico"
+            },
+            "created": "A new Campione Biologico is created with identifier {{ param }}",
+            "updated": "A Campione Biologico is updated with identifier {{ param }}",
+            "deleted": "A Campione Biologico is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Campione Biologico {{ id }}?"
+            },
+            "detail": {
+                "title": "Campione Biologico"
+            },
+            "codRH": "Cod RH",
+            "numeroCartellaClinica": "Numero Cartella Clinica",
+            "codUMG": "Cod UMG",
+            "dataEsecuzione": "Data Esecuzione",
+            "etaPaziente": "Eta Paziente",
+            "dimensioneGhiandolaProstatica": "Dimensione Ghiandola Prostatica",
+            "tipoCampione": "Tipo Campione",
+            "valutazionePCA3": "Valutazione PCA 3",
+            "psaTotale": "Psa Totale",
+            "rapportoFT": "Rapporto FT",
+            "psaFree": "Psa Free",
+            "malattia": "Malattia",
+            "dataBiopsia": "Data Biopsia",
+            "esitoBiopsiaProstaticaGleasonScoreComposizione": "Esito Biopsia Prostatica Gleason Score Composizione",
+            "esitoBiopsiaProstaticaGleasonScore": "Esito Biopsia Prostatica Gleason Score",
+            "numeroPrelieviPositiviSulTotale": "Numero Prelievi Positivi Sul Totale",
+            "totalePrelievi": "Totale Prelievi",
+            "pregressaChirurgiaProstatica": "Pregressa Chirurgia Prostatica",
+            "terapiaInibitori5AlfaReduttasi": "Terapia Inibitori 5 Alfa Reduttasi",
+            "terapiaAntiandrogenicaNeoadiuvante": "Terapia Antiandrogenica Neoadiuvante",
+            "radioterapiaPelvi": "Radioterapia Pelvi",
+            "rischio": "Rischio",
+            "dataIntervento": "Data Intervento",
+            "esameIstologicoT": "Esame Istologico T",
+            "esameIstologicoN": "Esame Istologico N",
+            "esameIstologicoGleasonScoreComposizione": "Esame Istologico Gleason Score Composizione",
+            "esameIstologicoGleasonScore": "Esame Istologico Gleason Score"
+        }
+    }
+}

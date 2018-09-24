@@ -1,0 +1,127 @@
+{
+    "name": "CampioneBiologico",
+    "fields": [
+        {
+            "fieldName": "codRH",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "numeroCartellaClinica",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "codUMG",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "dataEsecuzione",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "etaPaziente",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "dimensioneGhiandolaProstatica",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "tipoCampione",
+            "fieldType": "TipoCampione",
+            "fieldValues": "EMATICO,URINE,EMATICO_URINE"
+        },
+        {
+            "fieldName": "valutazionePCA3",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "psaTotale",
+            "fieldType": "Float"
+        },
+        {
+            "fieldName": "rapportoFT",
+            "fieldType": "Float"
+        },
+        {
+            "fieldName": "psaFree",
+            "fieldType": "Float"
+        },
+        {
+            "fieldName": "malattia",
+            "fieldType": "TipoMalattia",
+            "fieldValues": "PCA,IPB"
+        },
+        {
+            "fieldName": "dataBiopsia",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "esitoBiopsiaProstaticaGleasonScoreComposizione",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "esitoBiopsiaProstaticaGleasonScore",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "numeroPrelieviPositiviSulTotale",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "totalePrelievi",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "pregressaChirurgiaProstatica",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "terapiaInibitori5AlfaReduttasi",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "terapiaAntiandrogenicaNeoadiuvante",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "radioterapiaPelvi",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "rischio",
+            "fieldType": "TipoRischio",
+            "fieldValues": "BASSO,MEDIO,INTERMEDIO,ALTO"
+        },
+        {
+            "fieldName": "dataIntervento",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "esameIstologicoT",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "esameIstologicoN",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "esameIstologicoGleasonScoreComposizione",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "esameIstologicoGleasonScore",
+            "fieldType": "Integer"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20180706072009",
+    "entityTableName": "campione_biologico",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*",
+    "angularJSSuffix": "mySuffix"
+}

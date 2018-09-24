@@ -1,0 +1,10 @@
+{
+    "innoprostApp": {
+        "TipoCampione" : {
+            "null": "",
+            "EMATICO": "EMATICO",
+            "URINE": "URINE",
+            "EMATICO_URINE": "EMATICO_URINE"
+        }
+    }
+}

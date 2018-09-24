@@ -1,0 +1,183 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-campione-biologico-my-suffix-heading" jhiTranslate="innoprostApp.campioneBiologico.home.createOrEditLabel">Create or edit a Campione Biologico</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!campioneBiologico.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="campioneBiologico.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.codRH" for="field_codRH">Cod RH</label>
+                    <input type="text" class="form-control" name="codRH" id="field_codRH"
+                        [(ngModel)]="campioneBiologico.codRH" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.numeroCartellaClinica" for="field_numeroCartellaClinica">Numero Cartella Clinica</label>
+                    <input type="number" class="form-control" name="numeroCartellaClinica" id="field_numeroCartellaClinica"
+                        [(ngModel)]="campioneBiologico.numeroCartellaClinica" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.codUMG" for="field_codUMG">Cod UMG</label>
+                    <input type="text" class="form-control" name="codUMG" id="field_codUMG"
+                        [(ngModel)]="campioneBiologico.codUMG" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.dataEsecuzione" for="field_dataEsecuzione">Data Esecuzione</label>
+                    <div class="input-group">
+                        <input id="field_dataEsecuzione" type="text" class="form-control" name="dataEsecuzione" ngbDatepicker  #dataEsecuzioneDp="ngbDatepicker" [(ngModel)]="campioneBiologico.dataEsecuzione"
+                        />
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dataEsecuzioneDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.etaPaziente" for="field_etaPaziente">Eta Paziente</label>
+                    <input type="number" class="form-control" name="etaPaziente" id="field_etaPaziente"
+                        [(ngModel)]="campioneBiologico.etaPaziente" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.dimensioneGhiandolaProstatica" for="field_dimensioneGhiandolaProstatica">Dimensione Ghiandola Prostatica</label>
+                    <input type="number" class="form-control" name="dimensioneGhiandolaProstatica" id="field_dimensioneGhiandolaProstatica"
+                        [(ngModel)]="campioneBiologico.dimensioneGhiandolaProstatica" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.tipoCampione" for="field_tipoCampione">Tipo Campione</label>
+                    <select class="form-control" name="tipoCampione" [(ngModel)]="campioneBiologico.tipoCampione" id="field_tipoCampione" >
+                        <option value="EMATICO">{{'innoprostApp.TipoCampione.EMATICO' | translate}}</option>
+                        <option value="URINE">{{'innoprostApp.TipoCampione.URINE' | translate}}</option>
+                        <option value="EMATICO_URINE">{{'innoprostApp.TipoCampione.EMATICO_URINE' | translate}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.valutazionePCA3" for="field_valutazionePCA3">Valutazione PCA 3</label>
+                    <input type="text" class="form-control" name="valutazionePCA3" id="field_valutazionePCA3"
+                        [(ngModel)]="campioneBiologico.valutazionePCA3" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.psaTotale" for="field_psaTotale">Psa Totale</label>
+                    <input type="number" class="form-control" name="psaTotale" id="field_psaTotale"
+                        [(ngModel)]="campioneBiologico.psaTotale" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.rapportoFT" for="field_rapportoFT">Rapporto FT</label>
+                    <input type="number" class="form-control" name="rapportoFT" id="field_rapportoFT"
+                        [(ngModel)]="campioneBiologico.rapportoFT" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.psaFree" for="field_psaFree">Psa Free</label>
+                    <input type="number" class="form-control" name="psaFree" id="field_psaFree"
+                        [(ngModel)]="campioneBiologico.psaFree" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.malattia" for="field_malattia">Malattia</label>
+                    <select class="form-control" name="malattia" [(ngModel)]="campioneBiologico.malattia" id="field_malattia" >
+                        <option value="PCA">{{'innoprostApp.TipoMalattia.PCA' | translate}}</option>
+                        <option value="IPB">{{'innoprostApp.TipoMalattia.IPB' | translate}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.dataBiopsia" for="field_dataBiopsia">Data Biopsia</label>
+                    <div class="input-group">
+                        <input id="field_dataBiopsia" type="text" class="form-control" name="dataBiopsia" ngbDatepicker  #dataBiopsiaDp="ngbDatepicker" [(ngModel)]="campioneBiologico.dataBiopsia"
+                        />
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dataBiopsiaDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.esitoBiopsiaProstaticaGleasonScoreComposizione" for="field_esitoBiopsiaProstaticaGleasonScoreComposizione">Esito Biopsia Prostatica Gleason Score Composizione</label>
+                    <input type="text" class="form-control" name="esitoBiopsiaProstaticaGleasonScoreComposizione" id="field_esitoBiopsiaProstaticaGleasonScoreComposizione"
+                        [(ngModel)]="campioneBiologico.esitoBiopsiaProstaticaGleasonScoreComposizione" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.esitoBiopsiaProstaticaGleasonScore" for="field_esitoBiopsiaProstaticaGleasonScore">Esito Biopsia Prostatica Gleason Score</label>
+                    <input type="text" class="form-control" name="esitoBiopsiaProstaticaGleasonScore" id="field_esitoBiopsiaProstaticaGleasonScore"
+                        [(ngModel)]="campioneBiologico.esitoBiopsiaProstaticaGleasonScore" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.numeroPrelieviPositiviSulTotale" for="field_numeroPrelieviPositiviSulTotale">Numero Prelievi Positivi Sul Totale</label>
+                    <input type="number" class="form-control" name="numeroPrelieviPositiviSulTotale" id="field_numeroPrelieviPositiviSulTotale"
+                        [(ngModel)]="campioneBiologico.numeroPrelieviPositiviSulTotale" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.totalePrelievi" for="field_totalePrelievi">Totale Prelievi</label>
+                    <input type="number" class="form-control" name="totalePrelievi" id="field_totalePrelievi"
+                        [(ngModel)]="campioneBiologico.totalePrelievi" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.pregressaChirurgiaProstatica" for="field_pregressaChirurgiaProstatica">Pregressa Chirurgia Prostatica</label>
+                    <input type="checkbox" class="form-control" name="pregressaChirurgiaProstatica" id="field_pregressaChirurgiaProstatica"
+                        [(ngModel)]="campioneBiologico.pregressaChirurgiaProstatica" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.terapiaInibitori5AlfaReduttasi" for="field_terapiaInibitori5AlfaReduttasi">Terapia Inibitori 5 Alfa Reduttasi</label>
+                    <input type="checkbox" class="form-control" name="terapiaInibitori5AlfaReduttasi" id="field_terapiaInibitori5AlfaReduttasi"
+                        [(ngModel)]="campioneBiologico.terapiaInibitori5AlfaReduttasi" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.terapiaAntiandrogenicaNeoadiuvante" for="field_terapiaAntiandrogenicaNeoadiuvante">Terapia Antiandrogenica Neoadiuvante</label>
+                    <input type="checkbox" class="form-control" name="terapiaAntiandrogenicaNeoadiuvante" id="field_terapiaAntiandrogenicaNeoadiuvante"
+                        [(ngModel)]="campioneBiologico.terapiaAntiandrogenicaNeoadiuvante" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.radioterapiaPelvi" for="field_radioterapiaPelvi">Radioterapia Pelvi</label>
+                    <input type="checkbox" class="form-control" name="radioterapiaPelvi" id="field_radioterapiaPelvi"
+                        [(ngModel)]="campioneBiologico.radioterapiaPelvi" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.rischio" for="field_rischio">Rischio</label>
+                    <select class="form-control" name="rischio" [(ngModel)]="campioneBiologico.rischio" id="field_rischio" >
+                        <option value="BASSO">{{'innoprostApp.TipoRischio.BASSO' | translate}}</option>
+                        <option value="MEDIO">{{'innoprostApp.TipoRischio.MEDIO' | translate}}</option>
+                        <option value="INTERMEDIO">{{'innoprostApp.TipoRischio.INTERMEDIO' | translate}}</option>
+                        <option value="ALTO">{{'innoprostApp.TipoRischio.ALTO' | translate}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.dataIntervento" for="field_dataIntervento">Data Intervento</label>
+                    <div class="input-group">
+                        <input id="field_dataIntervento" type="text" class="form-control" name="dataIntervento" ngbDatepicker  #dataInterventoDp="ngbDatepicker" [(ngModel)]="campioneBiologico.dataIntervento"
+                        />
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dataInterventoDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoT" for="field_esameIstologicoT">Esame Istologico T</label>
+                    <input type="text" class="form-control" name="esameIstologicoT" id="field_esameIstologicoT"
+                        [(ngModel)]="campioneBiologico.esameIstologicoT" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoN" for="field_esameIstologicoN">Esame Istologico N</label>
+                    <input type="text" class="form-control" name="esameIstologicoN" id="field_esameIstologicoN"
+                        [(ngModel)]="campioneBiologico.esameIstologicoN" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoGleasonScoreComposizione" for="field_esameIstologicoGleasonScoreComposizione">Esame Istologico Gleason Score Composizione</label>
+                    <input type="text" class="form-control" name="esameIstologicoGleasonScoreComposizione" id="field_esameIstologicoGleasonScoreComposizione"
+                        [(ngModel)]="campioneBiologico.esameIstologicoGleasonScoreComposizione" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoGleasonScore" for="field_esameIstologicoGleasonScore">Esame Istologico Gleason Score</label>
+                    <input type="number" class="form-control" name="esameIstologicoGleasonScore" id="field_esameIstologicoGleasonScore"
+                        [(ngModel)]="campioneBiologico.esameIstologicoGleasonScore" />
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

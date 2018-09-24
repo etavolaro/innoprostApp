@@ -1,0 +1,9 @@
+{
+    "innoprostApp": {
+        "TipoMalattia" : {
+            "null": "",
+            "PCA": "PCA",
+            "IPB": "IPB"
+        }
+    }
+}

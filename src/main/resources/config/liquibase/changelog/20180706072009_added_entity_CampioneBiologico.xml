@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+
+    <property name="now" value="now()" dbms="mysql"/>
+    <property name="autoIncrement" value="true"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
+
+    <!--
+        Added the entity CampioneBiologico.
+    -->
+    <changeSet id="20180706072009-1" author="jhipster">
+        <createTable tableName="campione_biologico">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="cod_rh" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="numero_cartella_clinica" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="cod_umg" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="data_esecuzione" type="date">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="eta_paziente" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="dimensione_ghiandola_prostatica" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="tipo_campione" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="valutazione_pca_3" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="psa_totale" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="rapporto_ft" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="psa_free" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="malattia" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="data_biopsia" type="date">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="esito_biopsia_prostatica_gleason_score_composizione" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="esito_biopsia_prostatica_gleason_score" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="numero_prelievi_positivi_sul_totale" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="totale_prelievi" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="pregressa_chirurgia_prostatica" type="bit">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="terapia_inibitori_5_alfa_reduttasi" type="bit">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="terapia_antiandrogenica_neoadiuvante" type="bit">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="radioterapia_pelvi" type="bit">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="rischio" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="data_intervento" type="date">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="esame_istologico_t" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="esame_istologico_n" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="esame_istologico_gleason_score_composizione" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="esame_istologico_gleason_score" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+        
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+</databaseChangeLog>
