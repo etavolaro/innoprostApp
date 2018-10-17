@@ -1,13 +1,13 @@
 {
     "home": {
-        "title": "Benvenuto, Java Hipster!",
+        "title": "Benvenuto in InnoProst App!",
         "subtitle": "Questa è la tua home page",
         "logged": {
             "message": "Autenticato come \"{{username}}\"."
         },
         "question": "In caso di domande su JHipster:",
         "link": {
-            "homepage": "Homepage JHipster",
+            "homepage": "Homepage InnoProst App",
             "stackoverflow": "JHipster su Stack Overflow",
             "bugtracker": "JHipster tracciamento errori",
             "chat": "Chat room pubblica di JHipster",

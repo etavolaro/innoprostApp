@@ -2,7 +2,7 @@ entity CampioneBiologico{
 codRH String,
 numeroCartellaClinica Long,
 codUMG String,
-dataEsecuzione LocalDate,
+dataReclutament LocalDate,
 etaPaziente Integer,
 dimensioneGhiandolaProstatica Integer,
 tipoCampione TipoCampione,
@@ -29,7 +29,7 @@ esameIstologicoGleasonScore Integer
 }
 
 enum TipoRischio{
-BASSO, MEDIO, INTERMEDIO, ALTO
+BASSO, MEDIO, ALTO, INTERMEDIO
 }
 
 enum TipoCampione {
@@ -145,6 +145,7 @@ relationship OneToOne {
 // Set pagination options
 paginate JobHistory, Employee with infinite-scroll
 paginate Job with pagination
+paginate CampioneBiologico with pager
 
 dto * with mapstruct
 
@@ -152,3 +153,5 @@ dto * with mapstruct
 service all with serviceImpl except Employee, Job
 // Set an angular suffix
 angularSuffix * with mySuffix
+
+filter CampioneBiologico

@@ -14,8 +14,8 @@ export const enum TipoMalattia {
 export const enum TipoRischio {
     BASSO = 'BASSO',
     MEDIO = 'MEDIO',
-    INTERMEDIO = 'INTERMEDIO',
-    ALTO = 'ALTO'
+    ALTO = 'ALTO',
+    INTERMEDIO = 'INTERMEDIO'
 }
 
 export interface ICampioneBiologicoMySuffix {
@@ -23,7 +23,7 @@ export interface ICampioneBiologicoMySuffix {
     codRH?: string;
     numeroCartellaClinica?: number;
     codUMG?: string;
-    dataEsecuzione?: Moment;
+    dataReclutament?: Moment;
     etaPaziente?: number;
     dimensioneGhiandolaProstatica?: number;
     tipoCampione?: TipoCampione;
@@ -55,7 +55,7 @@ export class CampioneBiologicoMySuffix implements ICampioneBiologicoMySuffix {
         public codRH?: string,
         public numeroCartellaClinica?: number,
         public codUMG?: string,
-        public dataEsecuzione?: Moment,
+        public dataReclutament?: Moment,
         public etaPaziente?: number,
         public dimensioneGhiandolaProstatica?: number,
         public tipoCampione?: TipoCampione,

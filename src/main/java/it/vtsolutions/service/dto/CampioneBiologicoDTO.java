@@ -20,7 +20,7 @@ public class CampioneBiologicoDTO implements Serializable {
 
     private String codUMG;
 
-    private LocalDate dataEsecuzione;
+    private LocalDate dataReclutament;
 
     private Integer etaPaziente;
 
@@ -100,12 +100,12 @@ public class CampioneBiologicoDTO implements Serializable {
         this.codUMG = codUMG;
     }
 
-    public LocalDate getDataEsecuzione() {
-        return dataEsecuzione;
+    public LocalDate getDataReclutament() {
+        return dataReclutament;
     }
 
-    public void setDataEsecuzione(LocalDate dataEsecuzione) {
-        this.dataEsecuzione = dataEsecuzione;
+    public void setDataReclutament(LocalDate dataReclutament) {
+        this.dataReclutament = dataReclutament;
     }
 
     public Integer getEtaPaziente() {
@@ -320,7 +320,7 @@ public class CampioneBiologicoDTO implements Serializable {
             ", codRH='" + getCodRH() + "'" +
             ", numeroCartellaClinica=" + getNumeroCartellaClinica() +
             ", codUMG='" + getCodUMG() + "'" +
-            ", dataEsecuzione='" + getDataEsecuzione() + "'" +
+            ", dataReclutament='" + getDataReclutament() + "'" +
             ", etaPaziente=" + getEtaPaziente() +
             ", dimensioneGhiandolaProstatica=" + getDimensioneGhiandolaProstatica() +
             ", tipoCampione='" + getTipoCampione() + "'" +

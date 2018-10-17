@@ -2,7 +2,9 @@ package it.vtsolutions.service;
 
 import it.vtsolutions.service.dto.CampioneBiologicoDTO;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.Optional;
 
 /**
@@ -21,9 +23,10 @@ public interface CampioneBiologicoService {
     /**
      * Get all the campioneBiologicos.
      *
+     * @param pageable the pagination information
      * @return the list of entities
      */
-    List<CampioneBiologicoDTO> findAll();
+    Page<CampioneBiologicoDTO> findAll(Pageable pageable);
 
 
     /**

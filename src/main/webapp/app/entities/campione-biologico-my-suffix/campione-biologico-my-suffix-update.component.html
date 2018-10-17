@@ -25,12 +25,12 @@
                         [(ngModel)]="campioneBiologico.codUMG" />
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.dataEsecuzione" for="field_dataEsecuzione">Data Esecuzione</label>
+                    <label class="form-control-label" jhiTranslate="innoprostApp.campioneBiologico.dataReclutament" for="field_dataReclutament">Data Reclutament</label>
                     <div class="input-group">
-                        <input id="field_dataEsecuzione" type="text" class="form-control" name="dataEsecuzione" ngbDatepicker  #dataEsecuzioneDp="ngbDatepicker" [(ngModel)]="campioneBiologico.dataEsecuzione"
+                        <input id="field_dataReclutament" type="text" class="form-control" name="dataReclutament" ngbDatepicker  #dataReclutamentDp="ngbDatepicker" [(ngModel)]="campioneBiologico.dataReclutament"
                         />
                         <span class="input-group-append">
-                            <button type="button" class="btn btn-secondary" (click)="dataEsecuzioneDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                            <button type="button" class="btn btn-secondary" (click)="dataReclutamentDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
                         </span>
                     </div>
                 </div>
@@ -134,8 +134,8 @@
                     <select class="form-control" name="rischio" [(ngModel)]="campioneBiologico.rischio" id="field_rischio" >
                         <option value="BASSO">{{'innoprostApp.TipoRischio.BASSO' | translate}}</option>
                         <option value="MEDIO">{{'innoprostApp.TipoRischio.MEDIO' | translate}}</option>
-                        <option value="INTERMEDIO">{{'innoprostApp.TipoRischio.INTERMEDIO' | translate}}</option>
                         <option value="ALTO">{{'innoprostApp.TipoRischio.ALTO' | translate}}</option>
+                        <option value="INTERMEDIO">{{'innoprostApp.TipoRischio.INTERMEDIO' | translate}}</option>
                     </select>
                 </div>
                 <div class="form-group">

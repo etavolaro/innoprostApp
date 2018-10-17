@@ -34,7 +34,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="data_esecuzione" type="date">
+            <column name="data_reclutament" type="date">
                 <constraints nullable="true" />
             </column>
 

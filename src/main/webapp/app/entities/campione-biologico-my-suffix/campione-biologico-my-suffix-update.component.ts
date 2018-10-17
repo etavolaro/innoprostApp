@@ -13,7 +13,7 @@ import { CampioneBiologicoMySuffixService } from './campione-biologico-my-suffix
 export class CampioneBiologicoMySuffixUpdateComponent implements OnInit {
     private _campioneBiologico: ICampioneBiologicoMySuffix;
     isSaving: boolean;
-    dataEsecuzioneDp: any;
+    dataReclutamentDp: any;
     dataBiopsiaDp: any;
     dataInterventoDp: any;
 

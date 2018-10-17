@@ -8,13 +8,13 @@ import it.vtsolutions.service.mapper.CampioneBiologicoMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
-import java.util.List;
+
 import java.util.Optional;
-import java.util.stream.Collectors;
 /**
  * Service Implementation for managing CampioneBiologico.
  */
@@ -50,15 +50,15 @@ public class CampioneBiologicoServiceImpl implements CampioneBiologicoService {
     /**
      * Get all the campioneBiologicos.
      *
+     * @param pageable the pagination information
      * @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
-    public List<CampioneBiologicoDTO> findAll() {
+    public Page<CampioneBiologicoDTO> findAll(Pageable pageable) {
         log.debug("Request to get all CampioneBiologicos");
-        return campioneBiologicoRepository.findAll().stream()
-            .map(campioneBiologicoMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+        return campioneBiologicoRepository.findAll(pageable)
+            .map(campioneBiologicoMapper::toDto);
     }
 
 

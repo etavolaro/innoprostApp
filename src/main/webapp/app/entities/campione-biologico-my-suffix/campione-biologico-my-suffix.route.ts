@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { JhiPaginationUtil, JhiResolvePagingParams } from 'ng-jhipster';
 import { UserRouteAccessService } from 'app/core';
 import { Observable } from 'rxjs';
 import { CampioneBiologicoMySuffix } from 'app/shared/model/campione-biologico-my-suffix.model';
@@ -28,8 +29,12 @@ export const campioneBiologicoRoute: Routes = [
     {
         path: 'campione-biologico-my-suffix',
         component: CampioneBiologicoMySuffixComponent,
+        resolve: {
+            pagingParams: JhiResolvePagingParams
+        },
         data: {
             authorities: ['ROLE_USER'],
+            defaultSort: 'id,asc',
             pageTitle: 'innoprostApp.campioneBiologico.home.title'
         },
         canActivate: [UserRouteAccessService]

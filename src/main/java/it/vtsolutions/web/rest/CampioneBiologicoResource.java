@@ -4,10 +4,17 @@ import com.codahale.metrics.annotation.Timed;
 import it.vtsolutions.service.CampioneBiologicoService;
 import it.vtsolutions.web.rest.errors.BadRequestAlertException;
 import it.vtsolutions.web.rest.util.HeaderUtil;
+import it.vtsolutions.web.rest.util.PaginationUtil;
 import it.vtsolutions.service.dto.CampioneBiologicoDTO;
+import it.vtsolutions.service.dto.CampioneBiologicoCriteria;
+import it.vtsolutions.service.CampioneBiologicoQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +37,11 @@ public class CampioneBiologicoResource {
 
     private final CampioneBiologicoService campioneBiologicoService;
 
-    public CampioneBiologicoResource(CampioneBiologicoService campioneBiologicoService) {
+    private final CampioneBiologicoQueryService campioneBiologicoQueryService;
+
+    public CampioneBiologicoResource(CampioneBiologicoService campioneBiologicoService, CampioneBiologicoQueryService campioneBiologicoQueryService) {
         this.campioneBiologicoService = campioneBiologicoService;
+        this.campioneBiologicoQueryService = campioneBiologicoQueryService;
     }
 
     /**
@@ -79,13 +89,17 @@ public class CampioneBiologicoResource {
     /**
      * GET  /campione-biologicos : get all the campioneBiologicos.
      *
+     * @param pageable the pagination information
+     * @param criteria the criterias which the requested entities should match
      * @return the ResponseEntity with status 200 (OK) and the list of campioneBiologicos in body
      */
     @GetMapping("/campione-biologicos")
     @Timed
-    public List<CampioneBiologicoDTO> getAllCampioneBiologicos() {
-        log.debug("REST request to get all CampioneBiologicos");
-        return campioneBiologicoService.findAll();
+    public ResponseEntity<List<CampioneBiologicoDTO>> getAllCampioneBiologicos(CampioneBiologicoCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get CampioneBiologicos by criteria: {}", criteria);
+        Page<CampioneBiologicoDTO> page = campioneBiologicoQueryService.findByCriteria(criteria, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/campione-biologicos");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**

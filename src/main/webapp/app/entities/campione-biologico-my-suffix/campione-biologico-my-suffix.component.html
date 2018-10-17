@@ -1,6 +1,6 @@
 <div>
     <h2 id="page-heading">
-        <span jhiTranslate="innoprostApp.campioneBiologico.home.title">Campione Biologicos</span>
+        <span jhiTranslate="innoprostApp.campioneBiologico.home.title">Campione Biologico</span>
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-campione-biologico-my-suffix" [routerLink]="['/campione-biologico-my-suffix/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span  jhiTranslate="innoprostApp.campioneBiologico.home.createLabel">
@@ -13,45 +13,69 @@
     <div class="table-responsive" *ngIf="campioneBiologicos">
         <table class="table table-striped">
             <thead>
-            <tr>
-            <th><span jhiTranslate="global.field.id">ID</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.codRH">Cod RH</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.numeroCartellaClinica">Numero Cartella Clinica</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.codUMG">Cod UMG</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.dataEsecuzione">Data Esecuzione</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.etaPaziente">Eta Paziente</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.dimensioneGhiandolaProstatica">Dimensione Ghiandola Prostatica</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.tipoCampione">Tipo Campione</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.valutazionePCA3">Valutazione PCA 3</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.psaTotale">Psa Totale</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.rapportoFT">Rapporto FT</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.psaFree">Psa Free</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.malattia">Malattia</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.dataBiopsia">Data Biopsia</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.esitoBiopsiaProstaticaGleasonScoreComposizione">Esito Biopsia Prostatica Gleason Score Composizione</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.esitoBiopsiaProstaticaGleasonScore">Esito Biopsia Prostatica Gleason Score</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.numeroPrelieviPositiviSulTotale">Numero Prelievi Positivi Sul Totale</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.totalePrelievi">Totale Prelievi</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.pregressaChirurgiaProstatica">Pregressa Chirurgia Prostatica</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.terapiaInibitori5AlfaReduttasi">Terapia Inibitori 5 Alfa Reduttasi</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.terapiaAntiandrogenicaNeoadiuvante">Terapia Antiandrogenica Neoadiuvante</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.radioterapiaPelvi">Radioterapia Pelvi</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.rischio">Rischio</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.dataIntervento">Data Intervento</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoT">Esame Istologico T</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoN">Esame Istologico N</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoGleasonScoreComposizione">Esame Istologico Gleason Score Composizione</span></th>
-            <th><span jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoGleasonScore">Esame Istologico Gleason Score</span></th>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="codRH"><span jhiTranslate="innoprostApp.campioneBiologico.codRH">Cod RH</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="numeroCartellaClinica"><span jhiTranslate="innoprostApp.campioneBiologico.numeroCartellaClinica">Numero Cartella Clinica</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="codUMG"><span jhiTranslate="innoprostApp.campioneBiologico.codUMG">Cod UMG</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="dataReclutament"><span jhiTranslate="innoprostApp.campioneBiologico.dataReclutament">Data Reclutament</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="etaPaziente"><span jhiTranslate="innoprostApp.campioneBiologico.etaPaziente">Eta Paziente</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="dimensioneGhiandolaProstatica"><span jhiTranslate="innoprostApp.campioneBiologico.dimensioneGhiandolaProstatica">Dimensione Ghiandola Prostatica</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="tipoCampione"><span jhiTranslate="innoprostApp.campioneBiologico.tipoCampione">Tipo Campione</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="valutazionePCA3"><span jhiTranslate="innoprostApp.campioneBiologico.valutazionePCA3">Valutazione PCA 3</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="psaTotale"><span jhiTranslate="innoprostApp.campioneBiologico.psaTotale">Psa Totale</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="rapportoFT"><span jhiTranslate="innoprostApp.campioneBiologico.rapportoFT">Rapporto FT</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="psaFree"><span jhiTranslate="innoprostApp.campioneBiologico.psaFree">Psa Free</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="malattia"><span jhiTranslate="innoprostApp.campioneBiologico.malattia">Malattia</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="dataBiopsia"><span jhiTranslate="innoprostApp.campioneBiologico.dataBiopsia">Data Biopsia</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="esitoBiopsiaProstaticaGleasonScoreComposizione"><span jhiTranslate="innoprostApp.campioneBiologico.esitoBiopsiaProstaticaGleasonScoreComposizione">Esito Biopsia Prostatica Gleason Score Composizione</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="esitoBiopsiaProstaticaGleasonScore"><span jhiTranslate="innoprostApp.campioneBiologico.esitoBiopsiaProstaticaGleasonScore">Esito Biopsia Prostatica Gleason Score</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="numeroPrelieviPositiviSulTotale"><span jhiTranslate="innoprostApp.campioneBiologico.numeroPrelieviPositiviSulTotale">Numero Prelievi Positivi Sul Totale</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="totalePrelievi"><span jhiTranslate="innoprostApp.campioneBiologico.totalePrelievi">Totale Prelievi</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="pregressaChirurgiaProstatica"><span jhiTranslate="innoprostApp.campioneBiologico.pregressaChirurgiaProstatica">Pregressa Chirurgia Prostatica</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="terapiaInibitori5AlfaReduttasi"><span jhiTranslate="innoprostApp.campioneBiologico.terapiaInibitori5AlfaReduttasi">Terapia Inibitori 5 Alfa Reduttasi</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="terapiaAntiandrogenicaNeoadiuvante"><span jhiTranslate="innoprostApp.campioneBiologico.terapiaAntiandrogenicaNeoadiuvante">Terapia Antiandrogenica Neoadiuvante</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="radioterapiaPelvi"><span jhiTranslate="innoprostApp.campioneBiologico.radioterapiaPelvi">Radioterapia Pelvi</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="rischio"><span jhiTranslate="innoprostApp.campioneBiologico.rischio">Rischio</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="dataIntervento"><span jhiTranslate="innoprostApp.campioneBiologico.dataIntervento">Data Intervento</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="esameIstologicoT"><span jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoT">Esame Istologico T</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="esameIstologicoN"><span jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoN">Esame Istologico N</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="esameIstologicoGleasonScoreComposizione"><span jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoGleasonScoreComposizione">Esame Istologico Gleason Score Composizione</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="esameIstologicoGleasonScore"><span jhiTranslate="innoprostApp.campioneBiologico.esameIstologicoGleasonScore">Esame Istologico Gleason Score</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let campioneBiologico of campioneBiologicos ;trackBy: trackId">
+			      <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/campione-biologico-my-suffix', campioneBiologico.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/campione-biologico-my-suffix', campioneBiologico.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'campione-biologico-my-suffix/'+ campioneBiologico.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
                 <td><a [routerLink]="['/campione-biologico-my-suffix', campioneBiologico.id, 'view' ]">{{campioneBiologico.id}}</a></td>
                 <td>{{campioneBiologico.codRH}}</td>
                 <td>{{campioneBiologico.numeroCartellaClinica}}</td>
                 <td>{{campioneBiologico.codUMG}}</td>
-                <td>{{campioneBiologico.dataEsecuzione | date:'mediumDate'}}</td>
+                <td>{{campioneBiologico.dataReclutament | date:'mediumDate'}}</td>
                 <td>{{campioneBiologico.etaPaziente}}</td>
                 <td>{{campioneBiologico.dimensioneGhiandolaProstatica}}</td>
                 <td jhiTranslate="{{'innoprostApp.TipoCampione.' + campioneBiologico.tipoCampione}}">{{campioneBiologico.tipoCampione}}</td>
@@ -102,5 +126,14 @@
             </tr>
             </tbody>
         </table>
+    </div>
+    <!-- Pager is not implemented yet, so this is normal pagination instead -->
+    <div *ngIf="campioneBiologicos && campioneBiologicos.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
     </div>
 </div>

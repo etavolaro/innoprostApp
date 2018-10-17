@@ -17,11 +17,12 @@ Developement Ribbon
     z-index: 9999;
     pointer-events: none;
     opacity: 0.75;
+    display: none;
 }
 
 .ribbon a {
     color: #fff;
-    display: block;
+    display: none;
     font-weight: 400;
     margin: 1px 0;
     padding: 10px 50px;

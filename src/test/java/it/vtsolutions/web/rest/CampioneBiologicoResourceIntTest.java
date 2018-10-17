@@ -8,6 +8,8 @@ import it.vtsolutions.service.CampioneBiologicoService;
 import it.vtsolutions.service.dto.CampioneBiologicoDTO;
 import it.vtsolutions.service.mapper.CampioneBiologicoMapper;
 import it.vtsolutions.web.rest.errors.ExceptionTranslator;
+import it.vtsolutions.service.dto.CampioneBiologicoCriteria;
+import it.vtsolutions.service.CampioneBiologicoQueryService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -56,8 +58,8 @@ public class CampioneBiologicoResourceIntTest {
     private static final String DEFAULT_COD_UMG = "AAAAAAAAAA";
     private static final String UPDATED_COD_UMG = "BBBBBBBBBB";
 
-    private static final LocalDate DEFAULT_DATA_ESECUZIONE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_DATA_ESECUZIONE = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDate DEFAULT_DATA_RECLUTAMENT = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_DATA_RECLUTAMENT = LocalDate.now(ZoneId.systemDefault());
 
     private static final Integer DEFAULT_ETA_PAZIENTE = 1;
     private static final Integer UPDATED_ETA_PAZIENTE = 2;
@@ -140,6 +142,9 @@ public class CampioneBiologicoResourceIntTest {
     private CampioneBiologicoService campioneBiologicoService;
 
     @Autowired
+    private CampioneBiologicoQueryService campioneBiologicoQueryService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -158,7 +163,7 @@ public class CampioneBiologicoResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CampioneBiologicoResource campioneBiologicoResource = new CampioneBiologicoResource(campioneBiologicoService);
+        final CampioneBiologicoResource campioneBiologicoResource = new CampioneBiologicoResource(campioneBiologicoService, campioneBiologicoQueryService);
         this.restCampioneBiologicoMockMvc = MockMvcBuilders.standaloneSetup(campioneBiologicoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -177,7 +182,7 @@ public class CampioneBiologicoResourceIntTest {
             .codRH(DEFAULT_COD_RH)
             .numeroCartellaClinica(DEFAULT_NUMERO_CARTELLA_CLINICA)
             .codUMG(DEFAULT_COD_UMG)
-            .dataEsecuzione(DEFAULT_DATA_ESECUZIONE)
+            .dataReclutament(DEFAULT_DATA_RECLUTAMENT)
             .etaPaziente(DEFAULT_ETA_PAZIENTE)
             .dimensioneGhiandolaProstatica(DEFAULT_DIMENSIONE_GHIANDOLA_PROSTATICA)
             .tipoCampione(DEFAULT_TIPO_CAMPIONE)
@@ -228,7 +233,7 @@ public class CampioneBiologicoResourceIntTest {
         assertThat(testCampioneBiologico.getCodRH()).isEqualTo(DEFAULT_COD_RH);
         assertThat(testCampioneBiologico.getNumeroCartellaClinica()).isEqualTo(DEFAULT_NUMERO_CARTELLA_CLINICA);
         assertThat(testCampioneBiologico.getCodUMG()).isEqualTo(DEFAULT_COD_UMG);
-        assertThat(testCampioneBiologico.getDataEsecuzione()).isEqualTo(DEFAULT_DATA_ESECUZIONE);
+        assertThat(testCampioneBiologico.getDataReclutament()).isEqualTo(DEFAULT_DATA_RECLUTAMENT);
         assertThat(testCampioneBiologico.getEtaPaziente()).isEqualTo(DEFAULT_ETA_PAZIENTE);
         assertThat(testCampioneBiologico.getDimensioneGhiandolaProstatica()).isEqualTo(DEFAULT_DIMENSIONE_GHIANDOLA_PROSTATICA);
         assertThat(testCampioneBiologico.getTipoCampione()).isEqualTo(DEFAULT_TIPO_CAMPIONE);
@@ -288,7 +293,7 @@ public class CampioneBiologicoResourceIntTest {
             .andExpect(jsonPath("$.[*].codRH").value(hasItem(DEFAULT_COD_RH.toString())))
             .andExpect(jsonPath("$.[*].numeroCartellaClinica").value(hasItem(DEFAULT_NUMERO_CARTELLA_CLINICA.intValue())))
             .andExpect(jsonPath("$.[*].codUMG").value(hasItem(DEFAULT_COD_UMG.toString())))
-            .andExpect(jsonPath("$.[*].dataEsecuzione").value(hasItem(DEFAULT_DATA_ESECUZIONE.toString())))
+            .andExpect(jsonPath("$.[*].dataReclutament").value(hasItem(DEFAULT_DATA_RECLUTAMENT.toString())))
             .andExpect(jsonPath("$.[*].etaPaziente").value(hasItem(DEFAULT_ETA_PAZIENTE)))
             .andExpect(jsonPath("$.[*].dimensioneGhiandolaProstatica").value(hasItem(DEFAULT_DIMENSIONE_GHIANDOLA_PROSTATICA)))
             .andExpect(jsonPath("$.[*].tipoCampione").value(hasItem(DEFAULT_TIPO_CAMPIONE.toString())))
@@ -329,7 +334,7 @@ public class CampioneBiologicoResourceIntTest {
             .andExpect(jsonPath("$.codRH").value(DEFAULT_COD_RH.toString()))
             .andExpect(jsonPath("$.numeroCartellaClinica").value(DEFAULT_NUMERO_CARTELLA_CLINICA.intValue()))
             .andExpect(jsonPath("$.codUMG").value(DEFAULT_COD_UMG.toString()))
-            .andExpect(jsonPath("$.dataEsecuzione").value(DEFAULT_DATA_ESECUZIONE.toString()))
+            .andExpect(jsonPath("$.dataReclutament").value(DEFAULT_DATA_RECLUTAMENT.toString()))
             .andExpect(jsonPath("$.etaPaziente").value(DEFAULT_ETA_PAZIENTE))
             .andExpect(jsonPath("$.dimensioneGhiandolaProstatica").value(DEFAULT_DIMENSIONE_GHIANDOLA_PROSTATICA))
             .andExpect(jsonPath("$.tipoCampione").value(DEFAULT_TIPO_CAMPIONE.toString()))
@@ -354,6 +359,1350 @@ public class CampioneBiologicoResourceIntTest {
             .andExpect(jsonPath("$.esameIstologicoGleasonScoreComposizione").value(DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE_COMPOSIZIONE.toString()))
             .andExpect(jsonPath("$.esameIstologicoGleasonScore").value(DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE));
     }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByCodRHIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where codRH equals to DEFAULT_COD_RH
+        defaultCampioneBiologicoShouldBeFound("codRH.equals=" + DEFAULT_COD_RH);
+
+        // Get all the campioneBiologicoList where codRH equals to UPDATED_COD_RH
+        defaultCampioneBiologicoShouldNotBeFound("codRH.equals=" + UPDATED_COD_RH);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByCodRHIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where codRH in DEFAULT_COD_RH or UPDATED_COD_RH
+        defaultCampioneBiologicoShouldBeFound("codRH.in=" + DEFAULT_COD_RH + "," + UPDATED_COD_RH);
+
+        // Get all the campioneBiologicoList where codRH equals to UPDATED_COD_RH
+        defaultCampioneBiologicoShouldNotBeFound("codRH.in=" + UPDATED_COD_RH);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByCodRHIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where codRH is not null
+        defaultCampioneBiologicoShouldBeFound("codRH.specified=true");
+
+        // Get all the campioneBiologicoList where codRH is null
+        defaultCampioneBiologicoShouldNotBeFound("codRH.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByNumeroCartellaClinicaIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where numeroCartellaClinica equals to DEFAULT_NUMERO_CARTELLA_CLINICA
+        defaultCampioneBiologicoShouldBeFound("numeroCartellaClinica.equals=" + DEFAULT_NUMERO_CARTELLA_CLINICA);
+
+        // Get all the campioneBiologicoList where numeroCartellaClinica equals to UPDATED_NUMERO_CARTELLA_CLINICA
+        defaultCampioneBiologicoShouldNotBeFound("numeroCartellaClinica.equals=" + UPDATED_NUMERO_CARTELLA_CLINICA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByNumeroCartellaClinicaIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where numeroCartellaClinica in DEFAULT_NUMERO_CARTELLA_CLINICA or UPDATED_NUMERO_CARTELLA_CLINICA
+        defaultCampioneBiologicoShouldBeFound("numeroCartellaClinica.in=" + DEFAULT_NUMERO_CARTELLA_CLINICA + "," + UPDATED_NUMERO_CARTELLA_CLINICA);
+
+        // Get all the campioneBiologicoList where numeroCartellaClinica equals to UPDATED_NUMERO_CARTELLA_CLINICA
+        defaultCampioneBiologicoShouldNotBeFound("numeroCartellaClinica.in=" + UPDATED_NUMERO_CARTELLA_CLINICA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByNumeroCartellaClinicaIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where numeroCartellaClinica is not null
+        defaultCampioneBiologicoShouldBeFound("numeroCartellaClinica.specified=true");
+
+        // Get all the campioneBiologicoList where numeroCartellaClinica is null
+        defaultCampioneBiologicoShouldNotBeFound("numeroCartellaClinica.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByNumeroCartellaClinicaIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where numeroCartellaClinica greater than or equals to DEFAULT_NUMERO_CARTELLA_CLINICA
+        defaultCampioneBiologicoShouldBeFound("numeroCartellaClinica.greaterOrEqualThan=" + DEFAULT_NUMERO_CARTELLA_CLINICA);
+
+        // Get all the campioneBiologicoList where numeroCartellaClinica greater than or equals to UPDATED_NUMERO_CARTELLA_CLINICA
+        defaultCampioneBiologicoShouldNotBeFound("numeroCartellaClinica.greaterOrEqualThan=" + UPDATED_NUMERO_CARTELLA_CLINICA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByNumeroCartellaClinicaIsLessThanSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where numeroCartellaClinica less than or equals to DEFAULT_NUMERO_CARTELLA_CLINICA
+        defaultCampioneBiologicoShouldNotBeFound("numeroCartellaClinica.lessThan=" + DEFAULT_NUMERO_CARTELLA_CLINICA);
+
+        // Get all the campioneBiologicoList where numeroCartellaClinica less than or equals to UPDATED_NUMERO_CARTELLA_CLINICA
+        defaultCampioneBiologicoShouldBeFound("numeroCartellaClinica.lessThan=" + UPDATED_NUMERO_CARTELLA_CLINICA);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByCodUMGIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where codUMG equals to DEFAULT_COD_UMG
+        defaultCampioneBiologicoShouldBeFound("codUMG.equals=" + DEFAULT_COD_UMG);
+
+        // Get all the campioneBiologicoList where codUMG equals to UPDATED_COD_UMG
+        defaultCampioneBiologicoShouldNotBeFound("codUMG.equals=" + UPDATED_COD_UMG);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByCodUMGIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where codUMG in DEFAULT_COD_UMG or UPDATED_COD_UMG
+        defaultCampioneBiologicoShouldBeFound("codUMG.in=" + DEFAULT_COD_UMG + "," + UPDATED_COD_UMG);
+
+        // Get all the campioneBiologicoList where codUMG equals to UPDATED_COD_UMG
+        defaultCampioneBiologicoShouldNotBeFound("codUMG.in=" + UPDATED_COD_UMG);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByCodUMGIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where codUMG is not null
+        defaultCampioneBiologicoShouldBeFound("codUMG.specified=true");
+
+        // Get all the campioneBiologicoList where codUMG is null
+        defaultCampioneBiologicoShouldNotBeFound("codUMG.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataReclutamentIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataReclutament equals to DEFAULT_DATA_RECLUTAMENT
+        defaultCampioneBiologicoShouldBeFound("dataReclutament.equals=" + DEFAULT_DATA_RECLUTAMENT);
+
+        // Get all the campioneBiologicoList where dataReclutament equals to UPDATED_DATA_RECLUTAMENT
+        defaultCampioneBiologicoShouldNotBeFound("dataReclutament.equals=" + UPDATED_DATA_RECLUTAMENT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataReclutamentIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataReclutament in DEFAULT_DATA_RECLUTAMENT or UPDATED_DATA_RECLUTAMENT
+        defaultCampioneBiologicoShouldBeFound("dataReclutament.in=" + DEFAULT_DATA_RECLUTAMENT + "," + UPDATED_DATA_RECLUTAMENT);
+
+        // Get all the campioneBiologicoList where dataReclutament equals to UPDATED_DATA_RECLUTAMENT
+        defaultCampioneBiologicoShouldNotBeFound("dataReclutament.in=" + UPDATED_DATA_RECLUTAMENT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataReclutamentIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataReclutament is not null
+        defaultCampioneBiologicoShouldBeFound("dataReclutament.specified=true");
+
+        // Get all the campioneBiologicoList where dataReclutament is null
+        defaultCampioneBiologicoShouldNotBeFound("dataReclutament.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataReclutamentIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataReclutament greater than or equals to DEFAULT_DATA_RECLUTAMENT
+        defaultCampioneBiologicoShouldBeFound("dataReclutament.greaterOrEqualThan=" + DEFAULT_DATA_RECLUTAMENT);
+
+        // Get all the campioneBiologicoList where dataReclutament greater than or equals to UPDATED_DATA_RECLUTAMENT
+        defaultCampioneBiologicoShouldNotBeFound("dataReclutament.greaterOrEqualThan=" + UPDATED_DATA_RECLUTAMENT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataReclutamentIsLessThanSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataReclutament less than or equals to DEFAULT_DATA_RECLUTAMENT
+        defaultCampioneBiologicoShouldNotBeFound("dataReclutament.lessThan=" + DEFAULT_DATA_RECLUTAMENT);
+
+        // Get all the campioneBiologicoList where dataReclutament less than or equals to UPDATED_DATA_RECLUTAMENT
+        defaultCampioneBiologicoShouldBeFound("dataReclutament.lessThan=" + UPDATED_DATA_RECLUTAMENT);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEtaPazienteIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where etaPaziente equals to DEFAULT_ETA_PAZIENTE
+        defaultCampioneBiologicoShouldBeFound("etaPaziente.equals=" + DEFAULT_ETA_PAZIENTE);
+
+        // Get all the campioneBiologicoList where etaPaziente equals to UPDATED_ETA_PAZIENTE
+        defaultCampioneBiologicoShouldNotBeFound("etaPaziente.equals=" + UPDATED_ETA_PAZIENTE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEtaPazienteIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where etaPaziente in DEFAULT_ETA_PAZIENTE or UPDATED_ETA_PAZIENTE
+        defaultCampioneBiologicoShouldBeFound("etaPaziente.in=" + DEFAULT_ETA_PAZIENTE + "," + UPDATED_ETA_PAZIENTE);
+
+        // Get all the campioneBiologicoList where etaPaziente equals to UPDATED_ETA_PAZIENTE
+        defaultCampioneBiologicoShouldNotBeFound("etaPaziente.in=" + UPDATED_ETA_PAZIENTE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEtaPazienteIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where etaPaziente is not null
+        defaultCampioneBiologicoShouldBeFound("etaPaziente.specified=true");
+
+        // Get all the campioneBiologicoList where etaPaziente is null
+        defaultCampioneBiologicoShouldNotBeFound("etaPaziente.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEtaPazienteIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where etaPaziente greater than or equals to DEFAULT_ETA_PAZIENTE
+        defaultCampioneBiologicoShouldBeFound("etaPaziente.greaterOrEqualThan=" + DEFAULT_ETA_PAZIENTE);
+
+        // Get all the campioneBiologicoList where etaPaziente greater than or equals to UPDATED_ETA_PAZIENTE
+        defaultCampioneBiologicoShouldNotBeFound("etaPaziente.greaterOrEqualThan=" + UPDATED_ETA_PAZIENTE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEtaPazienteIsLessThanSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where etaPaziente less than or equals to DEFAULT_ETA_PAZIENTE
+        defaultCampioneBiologicoShouldNotBeFound("etaPaziente.lessThan=" + DEFAULT_ETA_PAZIENTE);
+
+        // Get all the campioneBiologicoList where etaPaziente less than or equals to UPDATED_ETA_PAZIENTE
+        defaultCampioneBiologicoShouldBeFound("etaPaziente.lessThan=" + UPDATED_ETA_PAZIENTE);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDimensioneGhiandolaProstaticaIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dimensioneGhiandolaProstatica equals to DEFAULT_DIMENSIONE_GHIANDOLA_PROSTATICA
+        defaultCampioneBiologicoShouldBeFound("dimensioneGhiandolaProstatica.equals=" + DEFAULT_DIMENSIONE_GHIANDOLA_PROSTATICA);
+
+        // Get all the campioneBiologicoList where dimensioneGhiandolaProstatica equals to UPDATED_DIMENSIONE_GHIANDOLA_PROSTATICA
+        defaultCampioneBiologicoShouldNotBeFound("dimensioneGhiandolaProstatica.equals=" + UPDATED_DIMENSIONE_GHIANDOLA_PROSTATICA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDimensioneGhiandolaProstaticaIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dimensioneGhiandolaProstatica in DEFAULT_DIMENSIONE_GHIANDOLA_PROSTATICA or UPDATED_DIMENSIONE_GHIANDOLA_PROSTATICA
+        defaultCampioneBiologicoShouldBeFound("dimensioneGhiandolaProstatica.in=" + DEFAULT_DIMENSIONE_GHIANDOLA_PROSTATICA + "," + UPDATED_DIMENSIONE_GHIANDOLA_PROSTATICA);
+
+        // Get all the campioneBiologicoList where dimensioneGhiandolaProstatica equals to UPDATED_DIMENSIONE_GHIANDOLA_PROSTATICA
+        defaultCampioneBiologicoShouldNotBeFound("dimensioneGhiandolaProstatica.in=" + UPDATED_DIMENSIONE_GHIANDOLA_PROSTATICA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDimensioneGhiandolaProstaticaIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dimensioneGhiandolaProstatica is not null
+        defaultCampioneBiologicoShouldBeFound("dimensioneGhiandolaProstatica.specified=true");
+
+        // Get all the campioneBiologicoList where dimensioneGhiandolaProstatica is null
+        defaultCampioneBiologicoShouldNotBeFound("dimensioneGhiandolaProstatica.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDimensioneGhiandolaProstaticaIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dimensioneGhiandolaProstatica greater than or equals to DEFAULT_DIMENSIONE_GHIANDOLA_PROSTATICA
+        defaultCampioneBiologicoShouldBeFound("dimensioneGhiandolaProstatica.greaterOrEqualThan=" + DEFAULT_DIMENSIONE_GHIANDOLA_PROSTATICA);
+
+        // Get all the campioneBiologicoList where dimensioneGhiandolaProstatica greater than or equals to UPDATED_DIMENSIONE_GHIANDOLA_PROSTATICA
+        defaultCampioneBiologicoShouldNotBeFound("dimensioneGhiandolaProstatica.greaterOrEqualThan=" + UPDATED_DIMENSIONE_GHIANDOLA_PROSTATICA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDimensioneGhiandolaProstaticaIsLessThanSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dimensioneGhiandolaProstatica less than or equals to DEFAULT_DIMENSIONE_GHIANDOLA_PROSTATICA
+        defaultCampioneBiologicoShouldNotBeFound("dimensioneGhiandolaProstatica.lessThan=" + DEFAULT_DIMENSIONE_GHIANDOLA_PROSTATICA);
+
+        // Get all the campioneBiologicoList where dimensioneGhiandolaProstatica less than or equals to UPDATED_DIMENSIONE_GHIANDOLA_PROSTATICA
+        defaultCampioneBiologicoShouldBeFound("dimensioneGhiandolaProstatica.lessThan=" + UPDATED_DIMENSIONE_GHIANDOLA_PROSTATICA);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByTipoCampioneIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where tipoCampione equals to DEFAULT_TIPO_CAMPIONE
+        defaultCampioneBiologicoShouldBeFound("tipoCampione.equals=" + DEFAULT_TIPO_CAMPIONE);
+
+        // Get all the campioneBiologicoList where tipoCampione equals to UPDATED_TIPO_CAMPIONE
+        defaultCampioneBiologicoShouldNotBeFound("tipoCampione.equals=" + UPDATED_TIPO_CAMPIONE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByTipoCampioneIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where tipoCampione in DEFAULT_TIPO_CAMPIONE or UPDATED_TIPO_CAMPIONE
+        defaultCampioneBiologicoShouldBeFound("tipoCampione.in=" + DEFAULT_TIPO_CAMPIONE + "," + UPDATED_TIPO_CAMPIONE);
+
+        // Get all the campioneBiologicoList where tipoCampione equals to UPDATED_TIPO_CAMPIONE
+        defaultCampioneBiologicoShouldNotBeFound("tipoCampione.in=" + UPDATED_TIPO_CAMPIONE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByTipoCampioneIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where tipoCampione is not null
+        defaultCampioneBiologicoShouldBeFound("tipoCampione.specified=true");
+
+        // Get all the campioneBiologicoList where tipoCampione is null
+        defaultCampioneBiologicoShouldNotBeFound("tipoCampione.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByValutazionePCA3IsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where valutazionePCA3 equals to DEFAULT_VALUTAZIONE_PCA_3
+        defaultCampioneBiologicoShouldBeFound("valutazionePCA3.equals=" + DEFAULT_VALUTAZIONE_PCA_3);
+
+        // Get all the campioneBiologicoList where valutazionePCA3 equals to UPDATED_VALUTAZIONE_PCA_3
+        defaultCampioneBiologicoShouldNotBeFound("valutazionePCA3.equals=" + UPDATED_VALUTAZIONE_PCA_3);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByValutazionePCA3IsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where valutazionePCA3 in DEFAULT_VALUTAZIONE_PCA_3 or UPDATED_VALUTAZIONE_PCA_3
+        defaultCampioneBiologicoShouldBeFound("valutazionePCA3.in=" + DEFAULT_VALUTAZIONE_PCA_3 + "," + UPDATED_VALUTAZIONE_PCA_3);
+
+        // Get all the campioneBiologicoList where valutazionePCA3 equals to UPDATED_VALUTAZIONE_PCA_3
+        defaultCampioneBiologicoShouldNotBeFound("valutazionePCA3.in=" + UPDATED_VALUTAZIONE_PCA_3);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByValutazionePCA3IsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where valutazionePCA3 is not null
+        defaultCampioneBiologicoShouldBeFound("valutazionePCA3.specified=true");
+
+        // Get all the campioneBiologicoList where valutazionePCA3 is null
+        defaultCampioneBiologicoShouldNotBeFound("valutazionePCA3.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByPsaTotaleIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where psaTotale equals to DEFAULT_PSA_TOTALE
+        defaultCampioneBiologicoShouldBeFound("psaTotale.equals=" + DEFAULT_PSA_TOTALE);
+
+        // Get all the campioneBiologicoList where psaTotale equals to UPDATED_PSA_TOTALE
+        defaultCampioneBiologicoShouldNotBeFound("psaTotale.equals=" + UPDATED_PSA_TOTALE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByPsaTotaleIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where psaTotale in DEFAULT_PSA_TOTALE or UPDATED_PSA_TOTALE
+        defaultCampioneBiologicoShouldBeFound("psaTotale.in=" + DEFAULT_PSA_TOTALE + "," + UPDATED_PSA_TOTALE);
+
+        // Get all the campioneBiologicoList where psaTotale equals to UPDATED_PSA_TOTALE
+        defaultCampioneBiologicoShouldNotBeFound("psaTotale.in=" + UPDATED_PSA_TOTALE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByPsaTotaleIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where psaTotale is not null
+        defaultCampioneBiologicoShouldBeFound("psaTotale.specified=true");
+
+        // Get all the campioneBiologicoList where psaTotale is null
+        defaultCampioneBiologicoShouldNotBeFound("psaTotale.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByRapportoFTIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where rapportoFT equals to DEFAULT_RAPPORTO_FT
+        defaultCampioneBiologicoShouldBeFound("rapportoFT.equals=" + DEFAULT_RAPPORTO_FT);
+
+        // Get all the campioneBiologicoList where rapportoFT equals to UPDATED_RAPPORTO_FT
+        defaultCampioneBiologicoShouldNotBeFound("rapportoFT.equals=" + UPDATED_RAPPORTO_FT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByRapportoFTIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where rapportoFT in DEFAULT_RAPPORTO_FT or UPDATED_RAPPORTO_FT
+        defaultCampioneBiologicoShouldBeFound("rapportoFT.in=" + DEFAULT_RAPPORTO_FT + "," + UPDATED_RAPPORTO_FT);
+
+        // Get all the campioneBiologicoList where rapportoFT equals to UPDATED_RAPPORTO_FT
+        defaultCampioneBiologicoShouldNotBeFound("rapportoFT.in=" + UPDATED_RAPPORTO_FT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByRapportoFTIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where rapportoFT is not null
+        defaultCampioneBiologicoShouldBeFound("rapportoFT.specified=true");
+
+        // Get all the campioneBiologicoList where rapportoFT is null
+        defaultCampioneBiologicoShouldNotBeFound("rapportoFT.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByPsaFreeIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where psaFree equals to DEFAULT_PSA_FREE
+        defaultCampioneBiologicoShouldBeFound("psaFree.equals=" + DEFAULT_PSA_FREE);
+
+        // Get all the campioneBiologicoList where psaFree equals to UPDATED_PSA_FREE
+        defaultCampioneBiologicoShouldNotBeFound("psaFree.equals=" + UPDATED_PSA_FREE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByPsaFreeIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where psaFree in DEFAULT_PSA_FREE or UPDATED_PSA_FREE
+        defaultCampioneBiologicoShouldBeFound("psaFree.in=" + DEFAULT_PSA_FREE + "," + UPDATED_PSA_FREE);
+
+        // Get all the campioneBiologicoList where psaFree equals to UPDATED_PSA_FREE
+        defaultCampioneBiologicoShouldNotBeFound("psaFree.in=" + UPDATED_PSA_FREE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByPsaFreeIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where psaFree is not null
+        defaultCampioneBiologicoShouldBeFound("psaFree.specified=true");
+
+        // Get all the campioneBiologicoList where psaFree is null
+        defaultCampioneBiologicoShouldNotBeFound("psaFree.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByMalattiaIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where malattia equals to DEFAULT_MALATTIA
+        defaultCampioneBiologicoShouldBeFound("malattia.equals=" + DEFAULT_MALATTIA);
+
+        // Get all the campioneBiologicoList where malattia equals to UPDATED_MALATTIA
+        defaultCampioneBiologicoShouldNotBeFound("malattia.equals=" + UPDATED_MALATTIA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByMalattiaIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where malattia in DEFAULT_MALATTIA or UPDATED_MALATTIA
+        defaultCampioneBiologicoShouldBeFound("malattia.in=" + DEFAULT_MALATTIA + "," + UPDATED_MALATTIA);
+
+        // Get all the campioneBiologicoList where malattia equals to UPDATED_MALATTIA
+        defaultCampioneBiologicoShouldNotBeFound("malattia.in=" + UPDATED_MALATTIA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByMalattiaIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where malattia is not null
+        defaultCampioneBiologicoShouldBeFound("malattia.specified=true");
+
+        // Get all the campioneBiologicoList where malattia is null
+        defaultCampioneBiologicoShouldNotBeFound("malattia.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataBiopsiaIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataBiopsia equals to DEFAULT_DATA_BIOPSIA
+        defaultCampioneBiologicoShouldBeFound("dataBiopsia.equals=" + DEFAULT_DATA_BIOPSIA);
+
+        // Get all the campioneBiologicoList where dataBiopsia equals to UPDATED_DATA_BIOPSIA
+        defaultCampioneBiologicoShouldNotBeFound("dataBiopsia.equals=" + UPDATED_DATA_BIOPSIA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataBiopsiaIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataBiopsia in DEFAULT_DATA_BIOPSIA or UPDATED_DATA_BIOPSIA
+        defaultCampioneBiologicoShouldBeFound("dataBiopsia.in=" + DEFAULT_DATA_BIOPSIA + "," + UPDATED_DATA_BIOPSIA);
+
+        // Get all the campioneBiologicoList where dataBiopsia equals to UPDATED_DATA_BIOPSIA
+        defaultCampioneBiologicoShouldNotBeFound("dataBiopsia.in=" + UPDATED_DATA_BIOPSIA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataBiopsiaIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataBiopsia is not null
+        defaultCampioneBiologicoShouldBeFound("dataBiopsia.specified=true");
+
+        // Get all the campioneBiologicoList where dataBiopsia is null
+        defaultCampioneBiologicoShouldNotBeFound("dataBiopsia.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataBiopsiaIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataBiopsia greater than or equals to DEFAULT_DATA_BIOPSIA
+        defaultCampioneBiologicoShouldBeFound("dataBiopsia.greaterOrEqualThan=" + DEFAULT_DATA_BIOPSIA);
+
+        // Get all the campioneBiologicoList where dataBiopsia greater than or equals to UPDATED_DATA_BIOPSIA
+        defaultCampioneBiologicoShouldNotBeFound("dataBiopsia.greaterOrEqualThan=" + UPDATED_DATA_BIOPSIA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataBiopsiaIsLessThanSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataBiopsia less than or equals to DEFAULT_DATA_BIOPSIA
+        defaultCampioneBiologicoShouldNotBeFound("dataBiopsia.lessThan=" + DEFAULT_DATA_BIOPSIA);
+
+        // Get all the campioneBiologicoList where dataBiopsia less than or equals to UPDATED_DATA_BIOPSIA
+        defaultCampioneBiologicoShouldBeFound("dataBiopsia.lessThan=" + UPDATED_DATA_BIOPSIA);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsitoBiopsiaProstaticaGleasonScoreComposizioneIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esitoBiopsiaProstaticaGleasonScoreComposizione equals to DEFAULT_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE_COMPOSIZIONE
+        defaultCampioneBiologicoShouldBeFound("esitoBiopsiaProstaticaGleasonScoreComposizione.equals=" + DEFAULT_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE_COMPOSIZIONE);
+
+        // Get all the campioneBiologicoList where esitoBiopsiaProstaticaGleasonScoreComposizione equals to UPDATED_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE_COMPOSIZIONE
+        defaultCampioneBiologicoShouldNotBeFound("esitoBiopsiaProstaticaGleasonScoreComposizione.equals=" + UPDATED_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE_COMPOSIZIONE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsitoBiopsiaProstaticaGleasonScoreComposizioneIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esitoBiopsiaProstaticaGleasonScoreComposizione in DEFAULT_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE_COMPOSIZIONE or UPDATED_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE_COMPOSIZIONE
+        defaultCampioneBiologicoShouldBeFound("esitoBiopsiaProstaticaGleasonScoreComposizione.in=" + DEFAULT_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE_COMPOSIZIONE + "," + UPDATED_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE_COMPOSIZIONE);
+
+        // Get all the campioneBiologicoList where esitoBiopsiaProstaticaGleasonScoreComposizione equals to UPDATED_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE_COMPOSIZIONE
+        defaultCampioneBiologicoShouldNotBeFound("esitoBiopsiaProstaticaGleasonScoreComposizione.in=" + UPDATED_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE_COMPOSIZIONE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsitoBiopsiaProstaticaGleasonScoreComposizioneIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esitoBiopsiaProstaticaGleasonScoreComposizione is not null
+        defaultCampioneBiologicoShouldBeFound("esitoBiopsiaProstaticaGleasonScoreComposizione.specified=true");
+
+        // Get all the campioneBiologicoList where esitoBiopsiaProstaticaGleasonScoreComposizione is null
+        defaultCampioneBiologicoShouldNotBeFound("esitoBiopsiaProstaticaGleasonScoreComposizione.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsitoBiopsiaProstaticaGleasonScoreIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esitoBiopsiaProstaticaGleasonScore equals to DEFAULT_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE
+        defaultCampioneBiologicoShouldBeFound("esitoBiopsiaProstaticaGleasonScore.equals=" + DEFAULT_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE);
+
+        // Get all the campioneBiologicoList where esitoBiopsiaProstaticaGleasonScore equals to UPDATED_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE
+        defaultCampioneBiologicoShouldNotBeFound("esitoBiopsiaProstaticaGleasonScore.equals=" + UPDATED_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsitoBiopsiaProstaticaGleasonScoreIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esitoBiopsiaProstaticaGleasonScore in DEFAULT_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE or UPDATED_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE
+        defaultCampioneBiologicoShouldBeFound("esitoBiopsiaProstaticaGleasonScore.in=" + DEFAULT_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE + "," + UPDATED_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE);
+
+        // Get all the campioneBiologicoList where esitoBiopsiaProstaticaGleasonScore equals to UPDATED_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE
+        defaultCampioneBiologicoShouldNotBeFound("esitoBiopsiaProstaticaGleasonScore.in=" + UPDATED_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsitoBiopsiaProstaticaGleasonScoreIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esitoBiopsiaProstaticaGleasonScore is not null
+        defaultCampioneBiologicoShouldBeFound("esitoBiopsiaProstaticaGleasonScore.specified=true");
+
+        // Get all the campioneBiologicoList where esitoBiopsiaProstaticaGleasonScore is null
+        defaultCampioneBiologicoShouldNotBeFound("esitoBiopsiaProstaticaGleasonScore.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByNumeroPrelieviPositiviSulTotaleIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where numeroPrelieviPositiviSulTotale equals to DEFAULT_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE
+        defaultCampioneBiologicoShouldBeFound("numeroPrelieviPositiviSulTotale.equals=" + DEFAULT_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE);
+
+        // Get all the campioneBiologicoList where numeroPrelieviPositiviSulTotale equals to UPDATED_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE
+        defaultCampioneBiologicoShouldNotBeFound("numeroPrelieviPositiviSulTotale.equals=" + UPDATED_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByNumeroPrelieviPositiviSulTotaleIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where numeroPrelieviPositiviSulTotale in DEFAULT_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE or UPDATED_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE
+        defaultCampioneBiologicoShouldBeFound("numeroPrelieviPositiviSulTotale.in=" + DEFAULT_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE + "," + UPDATED_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE);
+
+        // Get all the campioneBiologicoList where numeroPrelieviPositiviSulTotale equals to UPDATED_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE
+        defaultCampioneBiologicoShouldNotBeFound("numeroPrelieviPositiviSulTotale.in=" + UPDATED_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByNumeroPrelieviPositiviSulTotaleIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where numeroPrelieviPositiviSulTotale is not null
+        defaultCampioneBiologicoShouldBeFound("numeroPrelieviPositiviSulTotale.specified=true");
+
+        // Get all the campioneBiologicoList where numeroPrelieviPositiviSulTotale is null
+        defaultCampioneBiologicoShouldNotBeFound("numeroPrelieviPositiviSulTotale.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByNumeroPrelieviPositiviSulTotaleIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where numeroPrelieviPositiviSulTotale greater than or equals to DEFAULT_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE
+        defaultCampioneBiologicoShouldBeFound("numeroPrelieviPositiviSulTotale.greaterOrEqualThan=" + DEFAULT_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE);
+
+        // Get all the campioneBiologicoList where numeroPrelieviPositiviSulTotale greater than or equals to UPDATED_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE
+        defaultCampioneBiologicoShouldNotBeFound("numeroPrelieviPositiviSulTotale.greaterOrEqualThan=" + UPDATED_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByNumeroPrelieviPositiviSulTotaleIsLessThanSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where numeroPrelieviPositiviSulTotale less than or equals to DEFAULT_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE
+        defaultCampioneBiologicoShouldNotBeFound("numeroPrelieviPositiviSulTotale.lessThan=" + DEFAULT_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE);
+
+        // Get all the campioneBiologicoList where numeroPrelieviPositiviSulTotale less than or equals to UPDATED_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE
+        defaultCampioneBiologicoShouldBeFound("numeroPrelieviPositiviSulTotale.lessThan=" + UPDATED_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByTotalePrelieviIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where totalePrelievi equals to DEFAULT_TOTALE_PRELIEVI
+        defaultCampioneBiologicoShouldBeFound("totalePrelievi.equals=" + DEFAULT_TOTALE_PRELIEVI);
+
+        // Get all the campioneBiologicoList where totalePrelievi equals to UPDATED_TOTALE_PRELIEVI
+        defaultCampioneBiologicoShouldNotBeFound("totalePrelievi.equals=" + UPDATED_TOTALE_PRELIEVI);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByTotalePrelieviIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where totalePrelievi in DEFAULT_TOTALE_PRELIEVI or UPDATED_TOTALE_PRELIEVI
+        defaultCampioneBiologicoShouldBeFound("totalePrelievi.in=" + DEFAULT_TOTALE_PRELIEVI + "," + UPDATED_TOTALE_PRELIEVI);
+
+        // Get all the campioneBiologicoList where totalePrelievi equals to UPDATED_TOTALE_PRELIEVI
+        defaultCampioneBiologicoShouldNotBeFound("totalePrelievi.in=" + UPDATED_TOTALE_PRELIEVI);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByTotalePrelieviIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where totalePrelievi is not null
+        defaultCampioneBiologicoShouldBeFound("totalePrelievi.specified=true");
+
+        // Get all the campioneBiologicoList where totalePrelievi is null
+        defaultCampioneBiologicoShouldNotBeFound("totalePrelievi.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByTotalePrelieviIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where totalePrelievi greater than or equals to DEFAULT_TOTALE_PRELIEVI
+        defaultCampioneBiologicoShouldBeFound("totalePrelievi.greaterOrEqualThan=" + DEFAULT_TOTALE_PRELIEVI);
+
+        // Get all the campioneBiologicoList where totalePrelievi greater than or equals to UPDATED_TOTALE_PRELIEVI
+        defaultCampioneBiologicoShouldNotBeFound("totalePrelievi.greaterOrEqualThan=" + UPDATED_TOTALE_PRELIEVI);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByTotalePrelieviIsLessThanSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where totalePrelievi less than or equals to DEFAULT_TOTALE_PRELIEVI
+        defaultCampioneBiologicoShouldNotBeFound("totalePrelievi.lessThan=" + DEFAULT_TOTALE_PRELIEVI);
+
+        // Get all the campioneBiologicoList where totalePrelievi less than or equals to UPDATED_TOTALE_PRELIEVI
+        defaultCampioneBiologicoShouldBeFound("totalePrelievi.lessThan=" + UPDATED_TOTALE_PRELIEVI);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByPregressaChirurgiaProstaticaIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where pregressaChirurgiaProstatica equals to DEFAULT_PREGRESSA_CHIRURGIA_PROSTATICA
+        defaultCampioneBiologicoShouldBeFound("pregressaChirurgiaProstatica.equals=" + DEFAULT_PREGRESSA_CHIRURGIA_PROSTATICA);
+
+        // Get all the campioneBiologicoList where pregressaChirurgiaProstatica equals to UPDATED_PREGRESSA_CHIRURGIA_PROSTATICA
+        defaultCampioneBiologicoShouldNotBeFound("pregressaChirurgiaProstatica.equals=" + UPDATED_PREGRESSA_CHIRURGIA_PROSTATICA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByPregressaChirurgiaProstaticaIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where pregressaChirurgiaProstatica in DEFAULT_PREGRESSA_CHIRURGIA_PROSTATICA or UPDATED_PREGRESSA_CHIRURGIA_PROSTATICA
+        defaultCampioneBiologicoShouldBeFound("pregressaChirurgiaProstatica.in=" + DEFAULT_PREGRESSA_CHIRURGIA_PROSTATICA + "," + UPDATED_PREGRESSA_CHIRURGIA_PROSTATICA);
+
+        // Get all the campioneBiologicoList where pregressaChirurgiaProstatica equals to UPDATED_PREGRESSA_CHIRURGIA_PROSTATICA
+        defaultCampioneBiologicoShouldNotBeFound("pregressaChirurgiaProstatica.in=" + UPDATED_PREGRESSA_CHIRURGIA_PROSTATICA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByPregressaChirurgiaProstaticaIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where pregressaChirurgiaProstatica is not null
+        defaultCampioneBiologicoShouldBeFound("pregressaChirurgiaProstatica.specified=true");
+
+        // Get all the campioneBiologicoList where pregressaChirurgiaProstatica is null
+        defaultCampioneBiologicoShouldNotBeFound("pregressaChirurgiaProstatica.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByTerapiaInibitori5AlfaReduttasiIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where terapiaInibitori5AlfaReduttasi equals to DEFAULT_TERAPIA_INIBITORI_5_ALFA_REDUTTASI
+        defaultCampioneBiologicoShouldBeFound("terapiaInibitori5AlfaReduttasi.equals=" + DEFAULT_TERAPIA_INIBITORI_5_ALFA_REDUTTASI);
+
+        // Get all the campioneBiologicoList where terapiaInibitori5AlfaReduttasi equals to UPDATED_TERAPIA_INIBITORI_5_ALFA_REDUTTASI
+        defaultCampioneBiologicoShouldNotBeFound("terapiaInibitori5AlfaReduttasi.equals=" + UPDATED_TERAPIA_INIBITORI_5_ALFA_REDUTTASI);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByTerapiaInibitori5AlfaReduttasiIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where terapiaInibitori5AlfaReduttasi in DEFAULT_TERAPIA_INIBITORI_5_ALFA_REDUTTASI or UPDATED_TERAPIA_INIBITORI_5_ALFA_REDUTTASI
+        defaultCampioneBiologicoShouldBeFound("terapiaInibitori5AlfaReduttasi.in=" + DEFAULT_TERAPIA_INIBITORI_5_ALFA_REDUTTASI + "," + UPDATED_TERAPIA_INIBITORI_5_ALFA_REDUTTASI);
+
+        // Get all the campioneBiologicoList where terapiaInibitori5AlfaReduttasi equals to UPDATED_TERAPIA_INIBITORI_5_ALFA_REDUTTASI
+        defaultCampioneBiologicoShouldNotBeFound("terapiaInibitori5AlfaReduttasi.in=" + UPDATED_TERAPIA_INIBITORI_5_ALFA_REDUTTASI);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByTerapiaInibitori5AlfaReduttasiIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where terapiaInibitori5AlfaReduttasi is not null
+        defaultCampioneBiologicoShouldBeFound("terapiaInibitori5AlfaReduttasi.specified=true");
+
+        // Get all the campioneBiologicoList where terapiaInibitori5AlfaReduttasi is null
+        defaultCampioneBiologicoShouldNotBeFound("terapiaInibitori5AlfaReduttasi.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByTerapiaAntiandrogenicaNeoadiuvanteIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where terapiaAntiandrogenicaNeoadiuvante equals to DEFAULT_TERAPIA_ANTIANDROGENICA_NEOADIUVANTE
+        defaultCampioneBiologicoShouldBeFound("terapiaAntiandrogenicaNeoadiuvante.equals=" + DEFAULT_TERAPIA_ANTIANDROGENICA_NEOADIUVANTE);
+
+        // Get all the campioneBiologicoList where terapiaAntiandrogenicaNeoadiuvante equals to UPDATED_TERAPIA_ANTIANDROGENICA_NEOADIUVANTE
+        defaultCampioneBiologicoShouldNotBeFound("terapiaAntiandrogenicaNeoadiuvante.equals=" + UPDATED_TERAPIA_ANTIANDROGENICA_NEOADIUVANTE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByTerapiaAntiandrogenicaNeoadiuvanteIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where terapiaAntiandrogenicaNeoadiuvante in DEFAULT_TERAPIA_ANTIANDROGENICA_NEOADIUVANTE or UPDATED_TERAPIA_ANTIANDROGENICA_NEOADIUVANTE
+        defaultCampioneBiologicoShouldBeFound("terapiaAntiandrogenicaNeoadiuvante.in=" + DEFAULT_TERAPIA_ANTIANDROGENICA_NEOADIUVANTE + "," + UPDATED_TERAPIA_ANTIANDROGENICA_NEOADIUVANTE);
+
+        // Get all the campioneBiologicoList where terapiaAntiandrogenicaNeoadiuvante equals to UPDATED_TERAPIA_ANTIANDROGENICA_NEOADIUVANTE
+        defaultCampioneBiologicoShouldNotBeFound("terapiaAntiandrogenicaNeoadiuvante.in=" + UPDATED_TERAPIA_ANTIANDROGENICA_NEOADIUVANTE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByTerapiaAntiandrogenicaNeoadiuvanteIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where terapiaAntiandrogenicaNeoadiuvante is not null
+        defaultCampioneBiologicoShouldBeFound("terapiaAntiandrogenicaNeoadiuvante.specified=true");
+
+        // Get all the campioneBiologicoList where terapiaAntiandrogenicaNeoadiuvante is null
+        defaultCampioneBiologicoShouldNotBeFound("terapiaAntiandrogenicaNeoadiuvante.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByRadioterapiaPelviIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where radioterapiaPelvi equals to DEFAULT_RADIOTERAPIA_PELVI
+        defaultCampioneBiologicoShouldBeFound("radioterapiaPelvi.equals=" + DEFAULT_RADIOTERAPIA_PELVI);
+
+        // Get all the campioneBiologicoList where radioterapiaPelvi equals to UPDATED_RADIOTERAPIA_PELVI
+        defaultCampioneBiologicoShouldNotBeFound("radioterapiaPelvi.equals=" + UPDATED_RADIOTERAPIA_PELVI);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByRadioterapiaPelviIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where radioterapiaPelvi in DEFAULT_RADIOTERAPIA_PELVI or UPDATED_RADIOTERAPIA_PELVI
+        defaultCampioneBiologicoShouldBeFound("radioterapiaPelvi.in=" + DEFAULT_RADIOTERAPIA_PELVI + "," + UPDATED_RADIOTERAPIA_PELVI);
+
+        // Get all the campioneBiologicoList where radioterapiaPelvi equals to UPDATED_RADIOTERAPIA_PELVI
+        defaultCampioneBiologicoShouldNotBeFound("radioterapiaPelvi.in=" + UPDATED_RADIOTERAPIA_PELVI);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByRadioterapiaPelviIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where radioterapiaPelvi is not null
+        defaultCampioneBiologicoShouldBeFound("radioterapiaPelvi.specified=true");
+
+        // Get all the campioneBiologicoList where radioterapiaPelvi is null
+        defaultCampioneBiologicoShouldNotBeFound("radioterapiaPelvi.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByRischioIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where rischio equals to DEFAULT_RISCHIO
+        defaultCampioneBiologicoShouldBeFound("rischio.equals=" + DEFAULT_RISCHIO);
+
+        // Get all the campioneBiologicoList where rischio equals to UPDATED_RISCHIO
+        defaultCampioneBiologicoShouldNotBeFound("rischio.equals=" + UPDATED_RISCHIO);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByRischioIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where rischio in DEFAULT_RISCHIO or UPDATED_RISCHIO
+        defaultCampioneBiologicoShouldBeFound("rischio.in=" + DEFAULT_RISCHIO + "," + UPDATED_RISCHIO);
+
+        // Get all the campioneBiologicoList where rischio equals to UPDATED_RISCHIO
+        defaultCampioneBiologicoShouldNotBeFound("rischio.in=" + UPDATED_RISCHIO);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByRischioIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where rischio is not null
+        defaultCampioneBiologicoShouldBeFound("rischio.specified=true");
+
+        // Get all the campioneBiologicoList where rischio is null
+        defaultCampioneBiologicoShouldNotBeFound("rischio.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataInterventoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataIntervento equals to DEFAULT_DATA_INTERVENTO
+        defaultCampioneBiologicoShouldBeFound("dataIntervento.equals=" + DEFAULT_DATA_INTERVENTO);
+
+        // Get all the campioneBiologicoList where dataIntervento equals to UPDATED_DATA_INTERVENTO
+        defaultCampioneBiologicoShouldNotBeFound("dataIntervento.equals=" + UPDATED_DATA_INTERVENTO);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataInterventoIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataIntervento in DEFAULT_DATA_INTERVENTO or UPDATED_DATA_INTERVENTO
+        defaultCampioneBiologicoShouldBeFound("dataIntervento.in=" + DEFAULT_DATA_INTERVENTO + "," + UPDATED_DATA_INTERVENTO);
+
+        // Get all the campioneBiologicoList where dataIntervento equals to UPDATED_DATA_INTERVENTO
+        defaultCampioneBiologicoShouldNotBeFound("dataIntervento.in=" + UPDATED_DATA_INTERVENTO);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataInterventoIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataIntervento is not null
+        defaultCampioneBiologicoShouldBeFound("dataIntervento.specified=true");
+
+        // Get all the campioneBiologicoList where dataIntervento is null
+        defaultCampioneBiologicoShouldNotBeFound("dataIntervento.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataInterventoIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataIntervento greater than or equals to DEFAULT_DATA_INTERVENTO
+        defaultCampioneBiologicoShouldBeFound("dataIntervento.greaterOrEqualThan=" + DEFAULT_DATA_INTERVENTO);
+
+        // Get all the campioneBiologicoList where dataIntervento greater than or equals to UPDATED_DATA_INTERVENTO
+        defaultCampioneBiologicoShouldNotBeFound("dataIntervento.greaterOrEqualThan=" + UPDATED_DATA_INTERVENTO);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByDataInterventoIsLessThanSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where dataIntervento less than or equals to DEFAULT_DATA_INTERVENTO
+        defaultCampioneBiologicoShouldNotBeFound("dataIntervento.lessThan=" + DEFAULT_DATA_INTERVENTO);
+
+        // Get all the campioneBiologicoList where dataIntervento less than or equals to UPDATED_DATA_INTERVENTO
+        defaultCampioneBiologicoShouldBeFound("dataIntervento.lessThan=" + UPDATED_DATA_INTERVENTO);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsameIstologicoTIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esameIstologicoT equals to DEFAULT_ESAME_ISTOLOGICO_T
+        defaultCampioneBiologicoShouldBeFound("esameIstologicoT.equals=" + DEFAULT_ESAME_ISTOLOGICO_T);
+
+        // Get all the campioneBiologicoList where esameIstologicoT equals to UPDATED_ESAME_ISTOLOGICO_T
+        defaultCampioneBiologicoShouldNotBeFound("esameIstologicoT.equals=" + UPDATED_ESAME_ISTOLOGICO_T);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsameIstologicoTIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esameIstologicoT in DEFAULT_ESAME_ISTOLOGICO_T or UPDATED_ESAME_ISTOLOGICO_T
+        defaultCampioneBiologicoShouldBeFound("esameIstologicoT.in=" + DEFAULT_ESAME_ISTOLOGICO_T + "," + UPDATED_ESAME_ISTOLOGICO_T);
+
+        // Get all the campioneBiologicoList where esameIstologicoT equals to UPDATED_ESAME_ISTOLOGICO_T
+        defaultCampioneBiologicoShouldNotBeFound("esameIstologicoT.in=" + UPDATED_ESAME_ISTOLOGICO_T);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsameIstologicoTIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esameIstologicoT is not null
+        defaultCampioneBiologicoShouldBeFound("esameIstologicoT.specified=true");
+
+        // Get all the campioneBiologicoList where esameIstologicoT is null
+        defaultCampioneBiologicoShouldNotBeFound("esameIstologicoT.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsameIstologicoNIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esameIstologicoN equals to DEFAULT_ESAME_ISTOLOGICO_N
+        defaultCampioneBiologicoShouldBeFound("esameIstologicoN.equals=" + DEFAULT_ESAME_ISTOLOGICO_N);
+
+        // Get all the campioneBiologicoList where esameIstologicoN equals to UPDATED_ESAME_ISTOLOGICO_N
+        defaultCampioneBiologicoShouldNotBeFound("esameIstologicoN.equals=" + UPDATED_ESAME_ISTOLOGICO_N);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsameIstologicoNIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esameIstologicoN in DEFAULT_ESAME_ISTOLOGICO_N or UPDATED_ESAME_ISTOLOGICO_N
+        defaultCampioneBiologicoShouldBeFound("esameIstologicoN.in=" + DEFAULT_ESAME_ISTOLOGICO_N + "," + UPDATED_ESAME_ISTOLOGICO_N);
+
+        // Get all the campioneBiologicoList where esameIstologicoN equals to UPDATED_ESAME_ISTOLOGICO_N
+        defaultCampioneBiologicoShouldNotBeFound("esameIstologicoN.in=" + UPDATED_ESAME_ISTOLOGICO_N);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsameIstologicoNIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esameIstologicoN is not null
+        defaultCampioneBiologicoShouldBeFound("esameIstologicoN.specified=true");
+
+        // Get all the campioneBiologicoList where esameIstologicoN is null
+        defaultCampioneBiologicoShouldNotBeFound("esameIstologicoN.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsameIstologicoGleasonScoreComposizioneIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScoreComposizione equals to DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE_COMPOSIZIONE
+        defaultCampioneBiologicoShouldBeFound("esameIstologicoGleasonScoreComposizione.equals=" + DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE_COMPOSIZIONE);
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScoreComposizione equals to UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE_COMPOSIZIONE
+        defaultCampioneBiologicoShouldNotBeFound("esameIstologicoGleasonScoreComposizione.equals=" + UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE_COMPOSIZIONE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsameIstologicoGleasonScoreComposizioneIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScoreComposizione in DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE_COMPOSIZIONE or UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE_COMPOSIZIONE
+        defaultCampioneBiologicoShouldBeFound("esameIstologicoGleasonScoreComposizione.in=" + DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE_COMPOSIZIONE + "," + UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE_COMPOSIZIONE);
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScoreComposizione equals to UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE_COMPOSIZIONE
+        defaultCampioneBiologicoShouldNotBeFound("esameIstologicoGleasonScoreComposizione.in=" + UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE_COMPOSIZIONE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsameIstologicoGleasonScoreComposizioneIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScoreComposizione is not null
+        defaultCampioneBiologicoShouldBeFound("esameIstologicoGleasonScoreComposizione.specified=true");
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScoreComposizione is null
+        defaultCampioneBiologicoShouldNotBeFound("esameIstologicoGleasonScoreComposizione.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsameIstologicoGleasonScoreIsEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScore equals to DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE
+        defaultCampioneBiologicoShouldBeFound("esameIstologicoGleasonScore.equals=" + DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE);
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScore equals to UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE
+        defaultCampioneBiologicoShouldNotBeFound("esameIstologicoGleasonScore.equals=" + UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsameIstologicoGleasonScoreIsInShouldWork() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScore in DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE or UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE
+        defaultCampioneBiologicoShouldBeFound("esameIstologicoGleasonScore.in=" + DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE + "," + UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE);
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScore equals to UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE
+        defaultCampioneBiologicoShouldNotBeFound("esameIstologicoGleasonScore.in=" + UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsameIstologicoGleasonScoreIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScore is not null
+        defaultCampioneBiologicoShouldBeFound("esameIstologicoGleasonScore.specified=true");
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScore is null
+        defaultCampioneBiologicoShouldNotBeFound("esameIstologicoGleasonScore.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsameIstologicoGleasonScoreIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScore greater than or equals to DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE
+        defaultCampioneBiologicoShouldBeFound("esameIstologicoGleasonScore.greaterOrEqualThan=" + DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE);
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScore greater than or equals to UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE
+        defaultCampioneBiologicoShouldNotBeFound("esameIstologicoGleasonScore.greaterOrEqualThan=" + UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCampioneBiologicosByEsameIstologicoGleasonScoreIsLessThanSomething() throws Exception {
+        // Initialize the database
+        campioneBiologicoRepository.saveAndFlush(campioneBiologico);
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScore less than or equals to DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE
+        defaultCampioneBiologicoShouldNotBeFound("esameIstologicoGleasonScore.lessThan=" + DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE);
+
+        // Get all the campioneBiologicoList where esameIstologicoGleasonScore less than or equals to UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE
+        defaultCampioneBiologicoShouldBeFound("esameIstologicoGleasonScore.lessThan=" + UPDATED_ESAME_ISTOLOGICO_GLEASON_SCORE);
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned
+     */
+    private void defaultCampioneBiologicoShouldBeFound(String filter) throws Exception {
+        restCampioneBiologicoMockMvc.perform(get("/api/campione-biologicos?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(campioneBiologico.getId().intValue())))
+            .andExpect(jsonPath("$.[*].codRH").value(hasItem(DEFAULT_COD_RH.toString())))
+            .andExpect(jsonPath("$.[*].numeroCartellaClinica").value(hasItem(DEFAULT_NUMERO_CARTELLA_CLINICA.intValue())))
+            .andExpect(jsonPath("$.[*].codUMG").value(hasItem(DEFAULT_COD_UMG.toString())))
+            .andExpect(jsonPath("$.[*].dataReclutament").value(hasItem(DEFAULT_DATA_RECLUTAMENT.toString())))
+            .andExpect(jsonPath("$.[*].etaPaziente").value(hasItem(DEFAULT_ETA_PAZIENTE)))
+            .andExpect(jsonPath("$.[*].dimensioneGhiandolaProstatica").value(hasItem(DEFAULT_DIMENSIONE_GHIANDOLA_PROSTATICA)))
+            .andExpect(jsonPath("$.[*].tipoCampione").value(hasItem(DEFAULT_TIPO_CAMPIONE.toString())))
+            .andExpect(jsonPath("$.[*].valutazionePCA3").value(hasItem(DEFAULT_VALUTAZIONE_PCA_3.toString())))
+            .andExpect(jsonPath("$.[*].psaTotale").value(hasItem(DEFAULT_PSA_TOTALE.doubleValue())))
+            .andExpect(jsonPath("$.[*].rapportoFT").value(hasItem(DEFAULT_RAPPORTO_FT.doubleValue())))
+            .andExpect(jsonPath("$.[*].psaFree").value(hasItem(DEFAULT_PSA_FREE.doubleValue())))
+            .andExpect(jsonPath("$.[*].malattia").value(hasItem(DEFAULT_MALATTIA.toString())))
+            .andExpect(jsonPath("$.[*].dataBiopsia").value(hasItem(DEFAULT_DATA_BIOPSIA.toString())))
+            .andExpect(jsonPath("$.[*].esitoBiopsiaProstaticaGleasonScoreComposizione").value(hasItem(DEFAULT_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE_COMPOSIZIONE.toString())))
+            .andExpect(jsonPath("$.[*].esitoBiopsiaProstaticaGleasonScore").value(hasItem(DEFAULT_ESITO_BIOPSIA_PROSTATICA_GLEASON_SCORE.toString())))
+            .andExpect(jsonPath("$.[*].numeroPrelieviPositiviSulTotale").value(hasItem(DEFAULT_NUMERO_PRELIEVI_POSITIVI_SUL_TOTALE)))
+            .andExpect(jsonPath("$.[*].totalePrelievi").value(hasItem(DEFAULT_TOTALE_PRELIEVI)))
+            .andExpect(jsonPath("$.[*].pregressaChirurgiaProstatica").value(hasItem(DEFAULT_PREGRESSA_CHIRURGIA_PROSTATICA.booleanValue())))
+            .andExpect(jsonPath("$.[*].terapiaInibitori5AlfaReduttasi").value(hasItem(DEFAULT_TERAPIA_INIBITORI_5_ALFA_REDUTTASI.booleanValue())))
+            .andExpect(jsonPath("$.[*].terapiaAntiandrogenicaNeoadiuvante").value(hasItem(DEFAULT_TERAPIA_ANTIANDROGENICA_NEOADIUVANTE.booleanValue())))
+            .andExpect(jsonPath("$.[*].radioterapiaPelvi").value(hasItem(DEFAULT_RADIOTERAPIA_PELVI.booleanValue())))
+            .andExpect(jsonPath("$.[*].rischio").value(hasItem(DEFAULT_RISCHIO.toString())))
+            .andExpect(jsonPath("$.[*].dataIntervento").value(hasItem(DEFAULT_DATA_INTERVENTO.toString())))
+            .andExpect(jsonPath("$.[*].esameIstologicoT").value(hasItem(DEFAULT_ESAME_ISTOLOGICO_T.toString())))
+            .andExpect(jsonPath("$.[*].esameIstologicoN").value(hasItem(DEFAULT_ESAME_ISTOLOGICO_N.toString())))
+            .andExpect(jsonPath("$.[*].esameIstologicoGleasonScoreComposizione").value(hasItem(DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE_COMPOSIZIONE.toString())))
+            .andExpect(jsonPath("$.[*].esameIstologicoGleasonScore").value(hasItem(DEFAULT_ESAME_ISTOLOGICO_GLEASON_SCORE)));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned
+     */
+    private void defaultCampioneBiologicoShouldNotBeFound(String filter) throws Exception {
+        restCampioneBiologicoMockMvc.perform(get("/api/campione-biologicos?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+    }
+
     @Test
     @Transactional
     public void getNonExistingCampioneBiologico() throws Exception {
@@ -378,7 +1727,7 @@ public class CampioneBiologicoResourceIntTest {
             .codRH(UPDATED_COD_RH)
             .numeroCartellaClinica(UPDATED_NUMERO_CARTELLA_CLINICA)
             .codUMG(UPDATED_COD_UMG)
-            .dataEsecuzione(UPDATED_DATA_ESECUZIONE)
+            .dataReclutament(UPDATED_DATA_RECLUTAMENT)
             .etaPaziente(UPDATED_ETA_PAZIENTE)
             .dimensioneGhiandolaProstatica(UPDATED_DIMENSIONE_GHIANDOLA_PROSTATICA)
             .tipoCampione(UPDATED_TIPO_CAMPIONE)
@@ -416,7 +1765,7 @@ public class CampioneBiologicoResourceIntTest {
         assertThat(testCampioneBiologico.getCodRH()).isEqualTo(UPDATED_COD_RH);
         assertThat(testCampioneBiologico.getNumeroCartellaClinica()).isEqualTo(UPDATED_NUMERO_CARTELLA_CLINICA);
         assertThat(testCampioneBiologico.getCodUMG()).isEqualTo(UPDATED_COD_UMG);
-        assertThat(testCampioneBiologico.getDataEsecuzione()).isEqualTo(UPDATED_DATA_ESECUZIONE);
+        assertThat(testCampioneBiologico.getDataReclutament()).isEqualTo(UPDATED_DATA_RECLUTAMENT);
         assertThat(testCampioneBiologico.getEtaPaziente()).isEqualTo(UPDATED_ETA_PAZIENTE);
         assertThat(testCampioneBiologico.getDimensioneGhiandolaProstatica()).isEqualTo(UPDATED_DIMENSIONE_GHIANDOLA_PROSTATICA);
         assertThat(testCampioneBiologico.getTipoCampione()).isEqualTo(UPDATED_TIPO_CAMPIONE);

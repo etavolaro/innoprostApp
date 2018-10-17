@@ -50,9 +50,9 @@ export class CampioneBiologicoMySuffixService {
 
     private convertDateFromClient(campioneBiologico: ICampioneBiologicoMySuffix): ICampioneBiologicoMySuffix {
         const copy: ICampioneBiologicoMySuffix = Object.assign({}, campioneBiologico, {
-            dataEsecuzione:
-                campioneBiologico.dataEsecuzione != null && campioneBiologico.dataEsecuzione.isValid()
-                    ? campioneBiologico.dataEsecuzione.format(DATE_FORMAT)
+            dataReclutament:
+                campioneBiologico.dataReclutament != null && campioneBiologico.dataReclutament.isValid()
+                    ? campioneBiologico.dataReclutament.format(DATE_FORMAT)
                     : null,
             dataBiopsia:
                 campioneBiologico.dataBiopsia != null && campioneBiologico.dataBiopsia.isValid()
@@ -67,7 +67,7 @@ export class CampioneBiologicoMySuffixService {
     }
 
     private convertDateFromServer(res: EntityResponseType): EntityResponseType {
-        res.body.dataEsecuzione = res.body.dataEsecuzione != null ? moment(res.body.dataEsecuzione) : null;
+        res.body.dataReclutament = res.body.dataReclutament != null ? moment(res.body.dataReclutament) : null;
         res.body.dataBiopsia = res.body.dataBiopsia != null ? moment(res.body.dataBiopsia) : null;
         res.body.dataIntervento = res.body.dataIntervento != null ? moment(res.body.dataIntervento) : null;
         return res;
@@ -75,7 +75,8 @@ export class CampioneBiologicoMySuffixService {
 
     private convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
         res.body.forEach((campioneBiologico: ICampioneBiologicoMySuffix) => {
-            campioneBiologico.dataEsecuzione = campioneBiologico.dataEsecuzione != null ? moment(campioneBiologico.dataEsecuzione) : null;
+            campioneBiologico.dataReclutament =
+                campioneBiologico.dataReclutament != null ? moment(campioneBiologico.dataReclutament) : null;
             campioneBiologico.dataBiopsia = campioneBiologico.dataBiopsia != null ? moment(campioneBiologico.dataBiopsia) : null;
             campioneBiologico.dataIntervento = campioneBiologico.dataIntervento != null ? moment(campioneBiologico.dataIntervento) : null;
         });

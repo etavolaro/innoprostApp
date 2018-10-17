@@ -35,8 +35,8 @@ public class CampioneBiologico implements Serializable {
     @Column(name = "cod_umg")
     private String codUMG;
 
-    @Column(name = "data_esecuzione")
-    private LocalDate dataEsecuzione;
+    @Column(name = "data_reclutament")
+    private LocalDate dataReclutament;
 
     @Column(name = "eta_paziente")
     private Integer etaPaziente;
@@ -158,17 +158,17 @@ public class CampioneBiologico implements Serializable {
         this.codUMG = codUMG;
     }
 
-    public LocalDate getDataEsecuzione() {
-        return dataEsecuzione;
+    public LocalDate getDataReclutament() {
+        return dataReclutament;
     }
 
-    public CampioneBiologico dataEsecuzione(LocalDate dataEsecuzione) {
-        this.dataEsecuzione = dataEsecuzione;
+    public CampioneBiologico dataReclutament(LocalDate dataReclutament) {
+        this.dataReclutament = dataReclutament;
         return this;
     }
 
-    public void setDataEsecuzione(LocalDate dataEsecuzione) {
-        this.dataEsecuzione = dataEsecuzione;
+    public void setDataReclutament(LocalDate dataReclutament) {
+        this.dataReclutament = dataReclutament;
     }
 
     public Integer getEtaPaziente() {
@@ -498,7 +498,7 @@ public class CampioneBiologico implements Serializable {
             ", codRH='" + getCodRH() + "'" +
             ", numeroCartellaClinica=" + getNumeroCartellaClinica() +
             ", codUMG='" + getCodUMG() + "'" +
-            ", dataEsecuzione='" + getDataEsecuzione() + "'" +
+            ", dataReclutament='" + getDataReclutament() + "'" +
             ", etaPaziente=" + getEtaPaziente() +
             ", dimensioneGhiandolaProstatica=" + getDimensioneGhiandolaProstatica() +
             ", tipoCampione='" + getTipoCampione() + "'" +

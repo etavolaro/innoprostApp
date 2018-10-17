@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface CampioneBiologicoRepository extends JpaRepository<CampioneBiologico, Long> {
+public interface CampioneBiologicoRepository extends JpaRepository<CampioneBiologico, Long>, JpaSpecificationExecutor<CampioneBiologico> {
 
 }
