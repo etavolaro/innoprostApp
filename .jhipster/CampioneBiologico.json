@@ -14,7 +14,7 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "dataEsecuzione",
+            "fieldName": "dataReclutament",
             "fieldType": "LocalDate"
         },
         {
@@ -90,7 +90,7 @@
         {
             "fieldName": "rischio",
             "fieldType": "TipoRischio",
-            "fieldValues": "BASSO,MEDIO,INTERMEDIO,ALTO"
+            "fieldValues": "BASSO,MEDIO,ALTO,INTERMEDIO"
         },
         {
             "fieldName": "dataIntervento",
@@ -117,9 +117,9 @@
     "changelogDate": "20180706072009",
     "entityTableName": "campione_biologico",
     "dto": "mapstruct",
-    "pagination": "no",
+    "pagination": "pager",
     "service": "serviceImpl",
-    "jpaMetamodelFiltering": false,
+    "jpaMetamodelFiltering": true,
     "fluentMethods": true,
     "clientRootFolder": "",
     "applications": "*",
