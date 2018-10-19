@@ -13,8 +13,9 @@
     <div class="table-responsive" *ngIf="campioneBiologicos">
         <table class="table table-striped">
             <thead>
-            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+			<tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th></th>
+			<th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="codRH"><span jhiTranslate="innoprostApp.campioneBiologico.codRH">Cod RH</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="numeroCartellaClinica"><span jhiTranslate="innoprostApp.campioneBiologico.numeroCartellaClinica">Numero Cartella Clinica</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="codUMG"><span jhiTranslate="innoprostApp.campioneBiologico.codUMG">Cod UMG</span> <fa-icon [icon]="'sort'"></fa-icon></th>
