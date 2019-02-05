@@ -105,7 +105,7 @@ jhipster:
             key: a2ce5763b5c806e72aa4ceee90e49d131f310649
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: noreply-innoprost@vtsolutions.it
-        base-url: http://http://5.189.163.26:8080 # Modify according to your server's URL
+        base-url: http://5.189.163.26:8080 # Modify according to your server's URL
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx:
             enabled: true
