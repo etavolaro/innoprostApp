@@ -28,8 +28,8 @@ spring:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:mysql://localhost:3306/innoprostApp?useUnicode=true&characterEncoding=utf8&useSSL=false
-        username: root
-        password:
+        username: innoprost_db_user
+        password: innoprost.db.aQ4bJ74fWAhDeQG
         hikari:
             data-source-properties:
                 cachePrepStmts: true
@@ -48,10 +48,17 @@ spring:
     liquibase:
         contexts: prod
     mail:
-        host: localhost
-        port: 25
-        username:
-        password:
+        host: smtps.aruba.it
+        port: 465
+        username: noreply-innoprost@vtsolutions.it
+        password: nr_innProt5!App.
+        protocol: smtps
+        tls: true
+        auth: true
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtps.aruba.it
     thymeleaf:
         cache: true
 
@@ -97,8 +104,8 @@ jhipster:
             # security key (this key should be unique for your application, and kept secret)
             key: a2ce5763b5c806e72aa4ceee90e49d131f310649
     mail: # specific JHipster mail property, for standard properties see MailProperties
-        from: innoprostApp@localhost
-        base-url: http://my-server-url-to-change # Modify according to your server's URL
+        from: noreply-innoprost@vtsolutions.it
+        base-url: http://http://5.189.163.26:8080 # Modify according to your server's URL
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx:
             enabled: true
